@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Add a New Word{% endblock title %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title text-center">Substantiv hinzufügen</h3>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% include 'includes/form.html' %}
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="chapters">
+                  <button type="button" class="btn btn-secondary">1</button>
+                  <button type="button" class="btn btn-secondary">2</button>
+                  <button type="button" class="btn btn-secondary">3</button>
+                  <button type="button" class="btn btn-secondary">4</button>
+                  <button type="button" class="btn btn-secondary">5</button>
+                  <button type="button" class="btn btn-secondary">6</button>
+                  <button type="button" class="btn btn-secondary">7</button>
+                  <button type="button" class="btn btn-secondary">8</button>
+                  <button type="button" class="btn btn-secondary">9</button>
+                  <button type="button" class="btn btn-secondary">10</button>
+                </div>
+              </div>
+            <button type="submit" class="btn btn-primary btn-block">Zur Datenbank hinzufügen</button>
+          </form>
+        </div>
+        {% comment %}
+        <div class="card-footer text-muted text-center">
+          Already have an account? <a href="{% url 'login' %}">Log In</a>
+        </div>
+        {% endcomment %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block breadcrumb %}
+Add a word
+{% endblock breadcrumb %}   
