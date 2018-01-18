@@ -1,53 +1,39 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block title %}Quiz{% endblock title %}
-
-{% block javascript %}
-  <script src="{% static 'js/alerts.js' %}"></script>
-{% endblock javascript %}
-
-
-{% block stylesheet %}
-
-{% endblock stylesheet %}
-
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="jumbotron slimbotron">
-        <div class="container">
-          <h1>
-            <p class="text-center padding-down js-german">hallo</p>
-          </h1>
-        </div>
-        <hr>
-          <form method="post" novalidate>
-            {% csrf_token %}
-            {% include 'includes/form.html' %}
-            <button type='submit' class="btn btn-primary btn-block" id='checkbtn'>Abschicken</button>
-          </form>
+{% extends "base.html" %} {% load static %} {% block title %}Quiz{% endblock title %} {% block javascript %}
+<script src="{% static 'js/alerts.js' %}"></script> {% endblock javascript %} {% block stylesheet %} {% endblock stylesheet %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-md-10 col-sm-12">
+    <div class="jumbotron slimbotron">
+      <div class="container">
+        <h1>
+          <p class="text-center padding-down js-german">Wird geladen...</p>
+        </h1>
       </div>
+      <hr>
+      <form id="answer_form" method="post" novalidate>
+        {% csrf_token %} {% include 'includes/form.html' %}
+        <button type='submit' class="btn btn-primary btn-block" id='checkbtn' disabled>Abschicken</button>
+      </form>
+    </div>
 
     <div id="alert-fail" class="alert alert-danger alert-top" role="alert">
-        <button type="button" class="close alert-close" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <span class="alert-msg"></span>
-    </div>
-    
-    <div id="alert-succ" class="alert alert-success alert-top" role="alert">
-      <button type="button" class="close alert-close" aria-label="Close"><span aria-hidden="true">×</span></button>
+      <button type="button" class="close alert-close" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
       <span class="alert-msg"></span>
     </div>
-<!-- 
+
+    <div id="alert-succ" class="alert alert-success alert-top" role="alert">
+      <button type="button" class="close alert-close" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+      <span class="alert-msg"></span>
+    </div>
+    <!--
     <div style="margin:30px;" id='fade'>
       <button class="btn btn-danger" id="warn">Failure</button>
     </div> -->
 
 
-    </div>
   </div>
-{% endblock %}
-
-{% block breadcrumb %}
-  Quiz
-{% endblock breadcrumb %}
+</div>
+{% endblock %} {% block breadcrumb %} Quiz {% endblock breadcrumb %}

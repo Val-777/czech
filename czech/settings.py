@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'widget_tweaks',
     'django_extensions',
+    'rest_framework',
 
     'quiz',
 ]
@@ -137,3 +138,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# Django rest framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication'
+    ]
+}

@@ -18,43 +18,51 @@
 //         Alert.warn('This is warning alert.')
 //         });
 // });
-function extern (){
-    var german = $('.js-german');
-    czech = $.ajax({
-                url: '/ajax/get_exercise',
-                dataType: 'json',
-                success: function (exercise) {
-                    german.text(exercise['german']);
-                    return exercise['czech'];
-                }
-            });
-    return czech;
+
+async function getExercise() {
+  const response = await fetch('/ajax/get_exercise', {
+    method: 'GET',
+  });
+  const json = await response.json();
+  return json;
 }
 
-$(function() {
-    real_answer = extern();
-    window.setTimeout(function (){
-        console.log(real_answer['responseJSON']['czech']);
-        real_answer = real_answer['responseJSON']['czech'];
-        // $('#checkbtn').on('click', function (){
-        $('#form').submit(function(e){
-            e.preventDefault();
-            answer = $('#id_czech').val();
-            console.log(real_answer == answer);
-            // check(answer);
-        });
-    }, 500);
-});
+async function checkExercise(data) {
+  const setup = {
+    credentials: "same-origin",
+    method: 'POST',
+    headers: {
+      "X-CSRFToken": getCookie("csrftoken"),
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+  };
+  const merged = $.extend(options, setup);
+  const response = await fetch('/ajax/get_exercise', merged);
+  const json = await response.json();
 
-// $('#form').submit(function(e){
-//     $.post('/url/', $(this).serialize(), function(data){ ... 
-//        $('.message').html(data.message);
-//        // of course you can do something more fancy with your respone
-//     });
-//     e.preventDefault();
-// });
+  return json;
+}
 
+$(function () {
+  getExercise().then(function (exercise) {
+    $(".js-german").text(exercise.german);
+    $("#checkbtn").prop('disabled', false);
+    console.log(exercise);
+  });
 
-// function check(answer){
+  $("#answer_form").submit(function (e) {
+    e.preventDefault();
+    answer = $("#id_czech").val();
+    question = $(".js-german").text();
 
-// }
+    options = { answer: answer, question: question }
+    checkExercise(options).then(function () {
+      console.log('');
+    })
+    // console.log(options);
+    // console.log($(".js-german").text() + answer);
+    // check(answer);
+  });
+})

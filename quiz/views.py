@@ -4,6 +4,7 @@ from django.http import JsonResponse
 
 from .forms import WordForm, NounForm, ExNNSForm
 from .models import Word, ExNNS
+from .serializers import ExNNSSerializer
 # from .utils import update_attrs
 
 
@@ -23,9 +24,9 @@ def home(request):
     #             print('Fail!')
     #         return redirect('home')
     return render(request, 'quiz/home.html', context={
-                                            #   'exercise': exercise,
-                                              'form': form,
-                                              },)
+        #   'exercise': exercise,
+        'form': form,
+    },)
 
 
 def add(request):
@@ -37,7 +38,7 @@ def add(request):
             word_type = json_word.pop('type', None)
             request.session['json_word'] = json_word
             print(json_word)
-            return redirect('add_'+word_type.lower())
+            return redirect('add_' + word_type.lower())
     else:
         form = WordForm()
     return render(request, 'quiz/new_word.html', {'form': form})
@@ -61,6 +62,16 @@ def add_noun(request):
 
 
 def get_exercise(request):
+    """
+    Get new exercise via REST framework
+    """
     if request.method == 'GET':
         exercise = ExNNS.random()
-        return JsonResponse({'german': exercise.german, 'czech': exercise.czech})
+        serializer = ExNNSSerializer(exercise)
+        return JsonResponse(serializer.data)
+        # response = JsonResponse(
+        #     {'exercise_type': 'ExNNS', 'german': exercise.german})
+        # response.set_cookie('exercise_type', 'ExNNS')
+        # return response
+    elif request.method == 'POST':
+        print(request.data)
