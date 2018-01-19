@@ -36,7 +36,6 @@ async function checkExercise(data) {
   // without JSON.stringify, request.body will be empty!
   const options = { body: JSON.stringify(data) }
   $.extend(request, options);
-  // console.log(setup);
   const response = await fetch('/ajax/get_exercise', request);
   const json = await response.json();
 
@@ -46,11 +45,11 @@ async function checkExercise(data) {
 $(function () {
   getExercise().then(function (exercise) {
     $(".js-german").text(exercise.german);
-    $("#checkbtn").prop('disabled', false);
-    console.log(exercise);
+    $("#checkbtn, #id_czech").prop('disabled', false);
   });
 
   $("#answer_form").submit(function (e) {
+    $("#checkbtn, #id_czech").prop('disabled', true);
     e.preventDefault();
     answer = $("#id_czech").val();
     question = $(".js-german").text();
@@ -58,9 +57,18 @@ $(function () {
     options = { answer: answer, german: question }
     checkExercise(options).then(function (result) {
       result.status ?
-        $(".alert-success").fadeIn(1000).delay(2000).fadeOut(2000) :
-        $(".alert-danger").fadeIn(1000).delay(2000).fadeOut(2000);
+        $(".alert-success").fadeIn(1000) :
+        $(".alert-danger").fadeIn(1000);
     })
+  });
 
+  $(".weiter").click(function (e) {
+    $("#id_czech").val("");
+    $(".alert").fadeOut(1000);
+
+    getExercise().then(function (exercise) {
+      $(".js-german").text(exercise.german);
+      $("#checkbtn, #id_czech").prop('disabled', false);
+    });
   });
 })
