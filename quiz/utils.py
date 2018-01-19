@@ -36,8 +36,8 @@ def get_wikitext(czech):
              "utf8=1&"
              "formatversion=1").format(czech)
     with urlopen(QUERY) as url:
-            http_info = url.info()
-            raw_data = url.read().decode(http_info.get_content_charset())
+        http_info = url.info()
+        raw_data = url.read().decode(http_info.get_content_charset())
 
     project_info = json.loads(raw_data)
     result = {'headers': http_info.items(), 'body': project_info}

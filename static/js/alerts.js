@@ -27,19 +27,38 @@ async function getExercise() {
   return json;
 }
 
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
 async function checkExercise(data) {
-  const setup = {
+  const request = {
     credentials: "same-origin",
     method: 'POST',
     headers: {
       "X-CSRFToken": getCookie("csrftoken"),
       "Accept": "application/json",
       "Content-Type": "application/json",
-      'X-Requested-With': 'XMLHttpRequest'
+      // 'X-Requested-With': 'XMLHttpRequest'
     },
   };
-  const merged = $.extend(options, setup);
-  const response = await fetch('/ajax/get_exercise', merged);
+  // without JSON.stringify, request.body will be empty!
+  const options = { body: JSON.stringify(data) }
+  $.extend(request, options);
+  // console.log(setup);
+  const response = await fetch('/ajax/get_exercise', request);
   const json = await response.json();
 
   return json;
@@ -57,9 +76,9 @@ $(function () {
     answer = $("#id_czech").val();
     question = $(".js-german").text();
 
-    options = { answer: answer, question: question }
-    checkExercise(options).then(function () {
-      console.log('');
+    options = { answer: answer, german: question }
+    checkExercise(options).then(function (result) {
+      console.log(result);
     })
     // console.log(options);
     // console.log($(".js-german").text() + answer);

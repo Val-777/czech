@@ -1,6 +1,10 @@
 # from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse, HttpResponse
+from django.http import Http404
+
+import json
+import sys
 
 from .forms import WordForm, NounForm, ExNNSForm
 from .models import Word, ExNNS
@@ -12,19 +16,30 @@ def home(request):
     # if request.method == 'GET':
         # exercise = ExNNS.random()
         # request.session['exercise'] = exercise.czech
-    form = ExNNSForm()
-    # elif request.method == 'POST':
-    #     form = ExNNSForm(request.POST)
-    #     if form.is_valid():
-    #         czech = form.cleaned_data['czech']
-    #         print('Eingetippt wurde: {}, die richtige Antwort war: {}'.format(czech, request.session['exercise']))
-    #         if czech == request.session['exercise']:
-    #             print('Success!')
-    #         else:
-    #             print('Fail!')
-    #         return redirect('home')
+    # form = ExNNSForm()
+    # # elif request.method == 'POST':
+    # #     form = ExNNSForm(request.POST)
+    # #     if form.is_valid():
+    # #         czech = form.cleaned_data['czech']
+    # #         print('Eingetippt wurde: {}, die richtige Antwort war: {}'.format(czech, request.session['exercise']))
+    # #         if czech == request.session['exercise']:
+    # #             print('Success!')
+    # #         else:
+    # #             print('Fail!')
+    # #         return redirect('home')
+    # return render(request, 'quiz/home.html', context={
+    #     #   'exercise': exercise,
+    #     'form': form,
+    # },)
+    return redirect('exercise', type='ExNNS')
+
+
+def exercise(request, type):
+    if type == 'ExNNS':
+        form = ExNNSForm()
+    else:
+        raise Http404("No such exercise type found!")
     return render(request, 'quiz/home.html', context={
-        #   'exercise': exercise,
         'form': form,
     },)
 
@@ -68,10 +83,13 @@ def get_exercise(request):
     if request.method == 'GET':
         exercise = ExNNS.random()
         serializer = ExNNSSerializer(exercise)
+        print('request.body: {}'.format(request.body))
         return JsonResponse(serializer.data)
-        # response = JsonResponse(
-        #     {'exercise_type': 'ExNNS', 'german': exercise.german})
-        # response.set_cookie('exercise_type', 'ExNNS')
-        # return response
     elif request.method == 'POST':
-        print(request.data)
+        body = json.loads(request.body.decode("utf-8").replace("'", '"'))
+        print('User: {}'.format(body))
+        ex = getattr(sys.modules[__name__], request.COOKIES['exercise_type'])
+        database = get_object_or_404(ex, german=body['german'])
+        print('Database: {}'.format(database))
+        status = database.czech == body['answer']
+        return JsonResponse({'status': status})

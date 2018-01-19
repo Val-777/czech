@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.urls import path
 
 from quiz import views as quiz_views
 
@@ -24,4 +25,5 @@ urlpatterns = [
     url(r'^add_noun/', quiz_views.add_noun, name='add_noun'),
     url(r'^admin/', admin.site.urls),
     url(r'^ajax/get_exercise', quiz_views.get_exercise, name='get_exercise'),
+    path('exercises/<slug:type>/', quiz_views.exercise, name='exercise'),
 ]
