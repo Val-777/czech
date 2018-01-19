@@ -9,7 +9,7 @@
         </h1>
       </div>
       <hr>
-      <form id="answer_form" method="post" novalidate>
+      <form id="answer_form" method="post" novalidate autocomplete="off">
         {% csrf_token %} {% include 'includes/form.html' %}
         <button type='submit' class="btn btn-primary btn-block" id='checkbtn' disabled>Abschicken</button>
       </form>
