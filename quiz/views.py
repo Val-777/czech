@@ -7,7 +7,7 @@ import json
 import sys
 
 from .forms import WordForm, NounForm, ExNNSForm
-from .models import Word, ExNNS
+from .models import Word, ExNNS, ExAAS
 from .serializers import ExNNSSerializer
 # from .utils import update_attrs
 
@@ -70,6 +70,7 @@ def add_noun(request):
             # word = Word.get_word_type_class(word_type)(**json_word)
             word.save()
             ExNNS.make_new(word)
+            ExAAS.make_new(word)
             return redirect('add')
     else:
         form = NounForm(initial=request.session['json_word'])

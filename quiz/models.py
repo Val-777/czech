@@ -17,7 +17,8 @@ class Word(models.Model):
     the Czech and the German translations.
     """
     CHAPTER_CHOICES = ((x, str(x)) for x in range(11))
-    chapter = models.PositiveIntegerField(blank=True, null=True, choices=CHAPTER_CHOICES)
+    chapter = models.PositiveIntegerField(
+        blank=True, null=True, choices=CHAPTER_CHOICES)
     czech = models.CharField(unique=True, max_length=48, blank=False)
     german = models.CharField(max_length=48, blank=True)
 
@@ -56,7 +57,8 @@ class Word(models.Model):
                     for template in section.templates:
                         if 'Překlady' in template:
                             templates.append(dictify_template(template))
-                    template = max(templates, key=(lambda dic: len(dic.keys())))
+                    template = max(templates, key=(
+                        lambda dic: len(dic.keys())))
                     de = template['de']
                     de_list = de[0].split(', ')[0].strip('{}').split('|')
                     word['german'], word['gender_de'] = de_list[2], de_list[3].upper()
@@ -155,7 +157,26 @@ class ExNNS(Exercise):
     def make_new(cls, noun):
         exercise = cls(chapter=noun.chapter,
                        czech=noun.czech,
-                       german='{} {}'.format(german_article(noun.gender_de),
+                       german='{} {}'.format(german_article(noun.gender_de, 'nominativ'),
                                              noun.german),
+                       content=noun)
+        exercise.save()
+
+
+class ExAAS(Exercise):
+    """
+    The exercise for learning Accusative Case
+    """
+    content = models.ForeignKey(Noun,
+                                models.CASCADE,
+                                blank=False,
+                                null=False,)
+
+    @classmethod
+    def make_new(cls, noun):
+        exercise = cls(chapter=noun.chapter,
+                       czech=noun.dec['sacc'][0],
+                       german='Ich sehe {} {}.'.format(german_article(noun.gender_de, 'akkusativ'),
+                                                       noun.german),
                        content=noun)
         exercise.save()

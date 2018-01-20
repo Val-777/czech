@@ -64,10 +64,28 @@ def update_attrs(instance, **kwargs):
     # return instance.__class__.objects.get(pk=instance_pk)
 
 
-def german_article(gender_de):
+def german_article(gender_de, case):
+    masculine = {
+        'nominativ': 'der',
+        'genitiv': 'des',
+        'dativ': 'dem',
+        'akkusativ': 'den',
+    }
+    feminine = {
+        'nominativ': 'die',
+        'genitiv': 'der',
+        'dativ': 'der',
+        'akkusativ': 'die',
+    }
+    neutral = {
+        'nominativ': 'das',
+        'genitiv': 'des',
+        'dativ': 'dem',
+        'akkusativ': 'das',
+    }
     if gender_de is 'M':
-        return 'der'
+        return masculine[case]
     elif gender_de is 'F':
-        return 'die'
+        return feminine[case]
     elif gender_de is 'N':
-        return 'das'
+        return neutral[case]
