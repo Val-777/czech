@@ -6,43 +6,20 @@ from django.http import Http404
 import json
 import sys
 
-from .forms import WordForm, NounForm, ExNNSForm, ExAASForm, ExLNSForm
+from .forms import WordForm, NounForm, ExNNSForm, ExAASForm, ExLNSForm  # noqa: F401
 from .models import Word, ExNNS, ExAAS, ExLNS
-from .serializers import ExNNSSerializer, ExAASSerializer, ExLNSSerializer
+from .serializers import ExNNSSerializer, ExAASSerializer, ExLNSSerializer  # noqa: F401
 # from .utils import update_attrs
 
 
 def home(request):
-    # if request.method == 'GET':
-        # exercise = ExNNS.random()
-        # request.session['exercise'] = exercise.czech
-    # form = ExNNSForm()
-    # # elif request.method == 'POST':
-    # #     form = ExNNSForm(request.POST)
-    # #     if form.is_valid():
-    # #         czech = form.cleaned_data['czech']
-    # #         print('Eingetippt wurde: {}, die richtige Antwort war: {}'.format(czech, request.session['exercise']))
-    # #         if czech == request.session['exercise']:
-    # #             print('Success!')
-    # #         else:
-    # #             print('Fail!')
-    # #         return redirect('home')
-    # return render(request, 'quiz/home.html', context={
-    #     #   'exercise': exercise,
-    #     'form': form,
-    # },)
     return redirect('exercise', type='ExNNS')
 
 
 def exercise(request, type):
-    # form = getattr(sys.modules[__name__], type+'Form')
-    if type == 'ExNNS':
-        form = ExNNSForm()
-    elif type == 'ExAAS':
-        form = ExAASForm()
-    elif type == 'ExLNS':
-        form = ExLNSForm()
-    else:
+    try:
+        form = getattr(sys.modules[__name__], type + 'Form')
+    except AttributeError:
         raise Http404("No such exercise type found!")
     return render(request, 'quiz/home.html', context={
         'form': form,
