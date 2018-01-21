@@ -13,17 +13,17 @@ from .serializers import ExNNSSerializer, ExAASSerializer, ExLNSSerializer  # no
 
 
 def home(request):
-    return redirect('exercise', type='ExNNS')
+    return redirect('exercise', kind='ExNNS')
 
 
-def exercise(request, type):
+def exercise(request, kind):
     try:
-        form = getattr(sys.modules[__name__], type + 'Form')
+        form = getattr(sys.modules[__name__], kind + 'Form')
     except AttributeError:
         raise Http404("No such exercise type found!")
     return render(request, 'quiz/home.html', context={
         'form': form,
-        'type': type
+        'kind': kind
     },)
 
 
@@ -61,23 +61,28 @@ def add_noun(request):
     return render(request, 'quiz/new_noun.html', {'form': form})
 
 
-def get_exercise(request, type):
+def get_exercise(request, kind):
     """
     Get new exercise via REST framework
     """
     if request.method == 'GET':
-        ex = getattr(sys.modules[__name__], type)
+        ex = getattr(sys.modules[__name__], kind)
         exercise = ex.random()
-        serializer_class = getattr(sys.modules[__name__], type + 'Serializer')
+        serializer_class = getattr(sys.modules[__name__], kind + 'Serializer')
         serializer = serializer_class(exercise)
 
         return JsonResponse(serializer.data)
     elif request.method == 'POST':
         body = json.loads(request.body.decode("utf-8").replace("'", '"'))
-        # print('User: {}'.format(body))
-        ex = getattr(sys.modules[__name__], type)
+        ex = getattr(sys.modules[__name__], kind)
         database = get_object_or_404(ex, german=body['german'])
-        # print('Database: {}'.format(database))
+
         status = (body['answer'] is database.czech) or (
             body['answer'] in database.czech)
-        return JsonResponse({'status': status})
+        if '[' not in database.czech:
+            correct_answer = database.czech
+        else:
+            correct_answer = database.czech[2:-2].split("', '")
+            correct_answer = '{} oder {}'.format(
+                correct_answer[0], correct_answer[1])
+        return JsonResponse({'status': status, 'correct_answer': correct_answer})

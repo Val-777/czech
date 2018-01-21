@@ -62,7 +62,8 @@ $(function () {
     checkExercise(options, api_url).then(function (result) {
       result.status ?
         $(".alert-success").fadeIn(1000) :
-        $(".alert-danger").fadeIn(1000);
+        $("#correct_answer").text(result.correct_answer);
+      $(".alert-danger").fadeIn(1000);
     })
 
     $(document).keypress(function (event) {
