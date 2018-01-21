@@ -6,9 +6,9 @@ from django.http import Http404
 import json
 import sys
 
-from .forms import WordForm, NounForm, ExNNSForm, ExAASForm
-from .models import Word, ExNNS, ExAAS
-from .serializers import ExNNSSerializer, ExAASSerializer
+from .forms import WordForm, NounForm, ExNNSForm, ExAASForm, ExLNSForm
+from .models import Word, ExNNS, ExAAS, ExLNS
+from .serializers import ExNNSSerializer, ExAASSerializer, ExLNSSerializer
 # from .utils import update_attrs
 
 
@@ -35,10 +35,13 @@ def home(request):
 
 
 def exercise(request, type):
+    # form = getattr(sys.modules[__name__], type+'Form')
     if type == 'ExNNS':
         form = ExNNSForm()
     elif type == 'ExAAS':
         form = ExAASForm()
+    elif type == 'ExLNS':
+        form = ExLNSForm()
     else:
         raise Http404("No such exercise type found!")
     return render(request, 'quiz/home.html', context={
@@ -74,6 +77,7 @@ def add_noun(request):
             word.save()
             ExNNS.make_new(word)
             ExAAS.make_new(word)
+            ExLNS.make_new(word)
             return redirect('add')
     else:
         form = NounForm(initial=request.session['json_word'])
@@ -85,24 +89,18 @@ def get_exercise(request, type):
     Get new exercise via REST framework
     """
     if request.method == 'GET':
-        # origin = request.META['HTTP_REFERER']
-        # origin = origin.split('/')[-2]
-        # print(origin)
-
-        print('The slug is: {}'.format(type))
-
         ex = getattr(sys.modules[__name__], type)
         exercise = ex.random()
         serializer_class = getattr(sys.modules[__name__], type + 'Serializer')
         serializer = serializer_class(exercise)
-        # print('request.body: {}'.format(request.body))
+
         return JsonResponse(serializer.data)
     elif request.method == 'POST':
         body = json.loads(request.body.decode("utf-8").replace("'", '"'))
-        print('User: {}'.format(body))
-        # ex = getattr(sys.modules[__name__], request.COOKIES['exercise_type'])
+        # print('User: {}'.format(body))
         ex = getattr(sys.modules[__name__], type)
         database = get_object_or_404(ex, german=body['german'])
-        print('Database: {}'.format(database))
-        status = database.czech == body['answer']
+        # print('Database: {}'.format(database))
+        status = (body['answer'] is database.czech) or (
+            body['answer'] in database.czech)
         return JsonResponse({'status': status})

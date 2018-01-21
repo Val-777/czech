@@ -44,7 +44,7 @@ async function checkExercise(data, api_url) {
 
 $(function () {
   const exercise_type = $(location).attr('pathname').split('/').reverse()[1];
-  $('#' + exercise_type).toggleClass('active');
+  $('#' + exercise_type).toggleClass('list-group-item-info');
   const api_url = '/get_exercise/' + exercise_type + '/'
   getExercise(api_url).then(function (exercise) {
     $(".js-german").text(exercise.german);

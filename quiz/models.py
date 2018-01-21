@@ -175,8 +175,27 @@ class ExAAS(Exercise):
     @classmethod
     def make_new(cls, noun):
         exercise = cls(chapter=noun.chapter,
-                       czech=noun.dec['sacc'][0],
+                       czech=noun.dec['sacc'],
                        german='Ich sehe {} {}.'.format(german_article(noun.gender_de, 'akkusativ'),
                                                        noun.german),
+                       content=noun)
+        exercise.save()
+
+
+class ExLNS(Exercise):
+    """
+    The exercise for learning Locative Case
+    """
+    content = models.ForeignKey(Noun,
+                                models.CASCADE,
+                                blank=False,
+                                null=False,)
+
+    @classmethod
+    def make_new(cls, noun):
+        exercise = cls(chapter=noun.chapter,
+                       czech=noun.dec['sloc'],
+                       german='Ich spreche über {} {}.'.format(german_article(noun.gender_de, 'akkusativ'),
+                                                               noun.german),
                        content=noun)
         exercise.save()

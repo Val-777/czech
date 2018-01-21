@@ -52,3 +52,10 @@ class ExAASForm(forms.Form):
         label='Vidím ...',
         help_text='Tschechische Übersetzung hier eingeben',
     )
+
+
+class ExLNSForm(forms.Form):
+    czech = forms.CharField(
+        label='Mluvím o ...',
+        help_text='Tschechische Übersetzung hier eingeben',
+    )
