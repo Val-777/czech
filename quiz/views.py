@@ -8,7 +8,7 @@ import sys
 
 from .forms import WordForm, NounForm, ExNNSForm, ExAASForm
 from .models import Word, ExNNS, ExAAS
-from .serializers import ExNNSSerializer
+from .serializers import ExNNSSerializer, ExAASSerializer
 # from .utils import update_attrs
 
 
@@ -93,8 +93,9 @@ def get_exercise(request, type):
 
         ex = getattr(sys.modules[__name__], type)
         exercise = ex.random()
-        serializer = ExNNSSerializer(exercise)
-        print('request.body: {}'.format(request.body))
+        serializer_class = getattr(sys.modules[__name__], type + 'Serializer')
+        serializer = serializer_class(exercise)
+        # print('request.body: {}'.format(request.body))
         return JsonResponse(serializer.data)
     elif request.method == 'POST':
         body = json.loads(request.body.decode("utf-8").replace("'", '"'))
