@@ -1,5 +1,5 @@
-async function getExercise() {
-  const response = await fetch('/ajax/get_exercise', {
+async function getExercise(api_url) {
+  const response = await fetch(api_url, {
     method: 'GET',
   });
   const json = await response.json();
@@ -22,7 +22,7 @@ function getCookie(cname) {
   return "";
 }
 
-async function checkExercise(data) {
+async function checkExercise(data, api_url) {
   const request = {
     credentials: "same-origin",
     method: 'POST',
@@ -36,14 +36,16 @@ async function checkExercise(data) {
   // without JSON.stringify, request.body will be empty!
   const options = { body: JSON.stringify(data) }
   $.extend(request, options);
-  const response = await fetch('/ajax/get_exercise', request);
+  const response = await fetch(api_url, request);
   const json = await response.json();
 
   return json;
 }
 
 $(function () {
-  getExercise().then(function (exercise) {
+  const exercise_type = $(location).attr('pathname').split('/').reverse()[1] + '/';
+  const api_url = '/get_exercise/' + exercise_type
+  getExercise(api_url).then(function (exercise) {
     $(".js-german").text(exercise.german);
     $("#checkbtn, #id_czech").prop('disabled', false);
   });
@@ -55,7 +57,7 @@ $(function () {
     question = $(".js-german").text();
 
     options = { answer: answer, german: question }
-    checkExercise(options).then(function (result) {
+    checkExercise(options, api_url).then(function (result) {
       result.status ?
         $(".alert-success").fadeIn(1000) :
         $(".alert-danger").fadeIn(1000);
@@ -66,7 +68,7 @@ $(function () {
     $("#id_czech").val("");
     $(".alert").fadeOut(1000);
 
-    getExercise().then(function (exercise) {
+    getExercise(api_url).then(function (exercise) {
       $(".js-german").text(exercise.german);
       $("#checkbtn, #id_czech").prop('disabled', false);
     });

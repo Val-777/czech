@@ -6,7 +6,7 @@ from django.http import Http404
 import json
 import sys
 
-from .forms import WordForm, NounForm, ExNNSForm
+from .forms import WordForm, NounForm, ExNNSForm, ExAASForm
 from .models import Word, ExNNS, ExAAS
 from .serializers import ExNNSSerializer
 # from .utils import update_attrs
@@ -37,10 +37,13 @@ def home(request):
 def exercise(request, type):
     if type == 'ExNNS':
         form = ExNNSForm()
+    elif type == 'ExAAS':
+        form = ExAASForm()
     else:
         raise Http404("No such exercise type found!")
     return render(request, 'quiz/home.html', context={
         'form': form,
+        'type': type
     },)
 
 
@@ -77,11 +80,15 @@ def add_noun(request):
     return render(request, 'quiz/new_noun.html', {'form': form})
 
 
-def get_exercise(request):
+def get_exercise(request, type):
     """
     Get new exercise via REST framework
     """
     if request.method == 'GET':
+        origin = request.META['HTTP_REFERER']
+        origin = origin.split('/')[-2]
+        print(origin)
+        print('The slug is: {}'.format(type))
         exercise = ExNNS.random()
         serializer = ExNNSSerializer(exercise)
         print('request.body: {}'.format(request.body))

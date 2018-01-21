@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^add/', quiz_views.add, name='add'),
     url(r'^add_noun/', quiz_views.add_noun, name='add_noun'),
     url(r'^admin/', admin.site.urls),
-    url(r'^ajax/get_exercise', quiz_views.get_exercise, name='get_exercise'),
+    path('get_exercise/<slug:type>/',
+         quiz_views.get_exercise, name='get_exercise'),
     path('exercises/<slug:type>/', quiz_views.exercise, name='exercise'),
 ]

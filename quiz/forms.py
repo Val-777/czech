@@ -33,15 +33,22 @@ class NounForm(ModelForm):
         widgets = {
             'gender_cz': RadioSelect(attrs={
                 'choices': GENDER_CHOICES,
-                }),
+            }),
             'gender_de': RadioSelect(attrs={
                 'choices': GENDER_CHOICES,
-                }),
+            }),
         }
 
 
 class ExNNSForm(forms.Form):
     czech = forms.CharField(
         label='',
+        help_text='Tschechische Übersetzung hier eingeben',
+    )
+
+
+class ExAASForm(forms.Form):
+    czech = forms.CharField(
+        label='Vidím ...',
         help_text='Tschechische Übersetzung hier eingeben',
     )
