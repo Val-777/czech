@@ -65,15 +65,16 @@ $(function () {
         $(".alert-danger").fadeIn(1000);
     })
 
-    // $(document).keypress(function (event) {
-    //   var keycode = event.keyCode || event.which;
-    //   if (keycode == '13') {
-    //     $(".weiter").trigger("click");
-    //   }
-    // });
+    $(document).keypress(function (event) {
+      var keycode = event.keyCode || event.which;
+      if (keycode == '13') {
+        $(".weiter").trigger("click");
+      }
+    });
   });
 
   $(".weiter").click(function (e) {
+    $(document).unbind("keypress");
     $("#id_czech").val("");
     $(".alert").fadeOut(1000);
     $(".js-german").slideUp("slow", function () {
