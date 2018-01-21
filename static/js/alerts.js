@@ -49,6 +49,7 @@ $(function () {
   getExercise(api_url).then(function (exercise) {
     $(".js-german").text(exercise.german);
     $("#checkbtn, #id_czech").prop('disabled', false);
+    $("#id_czech").focus();
   });
 
   $("#answer_form").submit(function (e) {
@@ -63,15 +64,24 @@ $(function () {
         $(".alert-success").fadeIn(1000) :
         $(".alert-danger").fadeIn(1000);
     })
+
+    // $(document).keypress(function (event) {
+    //   var keycode = event.keyCode || event.which;
+    //   if (keycode == '13') {
+    //     $(".weiter").trigger("click");
+    //   }
+    // });
   });
 
   $(".weiter").click(function (e) {
     $("#id_czech").val("");
     $(".alert").fadeOut(1000);
-
-    getExercise(api_url).then(function (exercise) {
-      $(".js-german").text(exercise.german);
-      $("#checkbtn, #id_czech").prop('disabled', false);
+    $(".js-german").slideUp("slow", function () {
+      getExercise(api_url).then(function (exercise) {
+        $(".js-german").text(exercise.german).slideDown("slow");
+        $("#checkbtn, #id_czech").prop('disabled', false);
+        $("#id_czech").focus();
+      });
     });
   });
 })
