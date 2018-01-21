@@ -85,18 +85,22 @@ def get_exercise(request, type):
     Get new exercise via REST framework
     """
     if request.method == 'GET':
-        origin = request.META['HTTP_REFERER']
-        origin = origin.split('/')[-2]
-        print(origin)
+        # origin = request.META['HTTP_REFERER']
+        # origin = origin.split('/')[-2]
+        # print(origin)
+
         print('The slug is: {}'.format(type))
-        exercise = ExNNS.random()
+
+        ex = getattr(sys.modules[__name__], type)
+        exercise = ex.random()
         serializer = ExNNSSerializer(exercise)
         print('request.body: {}'.format(request.body))
         return JsonResponse(serializer.data)
     elif request.method == 'POST':
         body = json.loads(request.body.decode("utf-8").replace("'", '"'))
         print('User: {}'.format(body))
-        ex = getattr(sys.modules[__name__], request.COOKIES['exercise_type'])
+        # ex = getattr(sys.modules[__name__], request.COOKIES['exercise_type'])
+        ex = getattr(sys.modules[__name__], type)
         database = get_object_or_404(ex, german=body['german'])
         print('Database: {}'.format(database))
         status = database.czech == body['answer']
