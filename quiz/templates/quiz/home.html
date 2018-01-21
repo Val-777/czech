@@ -1,16 +1,16 @@
 {% extends "base.html" %} {% load static %} {% block title %}Quiz{% endblock title %} {% block javascript %}
 <script src="{% static 'js/alerts.js' %}"></script> {% endblock javascript %} {% block stylesheet %} {% endblock stylesheet %} {% block content %}
 <div class="row justify-content-center">
-  <div class="col-lg-4 col-md-2">
+  <div class="col-lg-4 col-md-4">
     <div class="jumbotron">
       <ul class="list-group">
-        <li class="list-group-item" id='ExNNS'>Übung 1: Der Nominativ</li>
-        <li class="list-group-item" id='ExAAS'>Übung 2: Der Akkusativ</li>
+        <a href="{% url 'exercise' type='ExNNS' %}" class="list-group-item list-group-item-action" id='ExNNS'>Übung 1: Der Nominativ</a>
+        <a href="{% url 'exercise' type='ExAAS' %}" class="list-group-item list-group-item-action" id='ExAAS'>Übung 2: Der Akkusativ</a>
         <li class="list-group-item disabled" id='ExGGS'>Übung 3: Der Genitiv</li>
       </ul>
     </div>
   </div>
-  <div class="col-lg-8 col-md-10 col-sm-12">
+  <div class="col-lg-8 col-md-8 col-sm-12">
     <div class="jumbotron slimbotron">
       <div class="container">
         <h1>
