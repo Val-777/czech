@@ -7,6 +7,7 @@ from jsonfield import JSONField
 from .utils import (dictify_template,
                     get_wikitext,
                     german_article,
+                    standardize_german_noun_json,
                     )
 
 
@@ -119,6 +120,20 @@ class Noun(Word):
 
     dec = JSONField(blank=True)
 
+    de = JSONField(blank=True)
+
+    @staticmethod
+    def get_german_word_json(german):
+        """
+        Get JSON representation of German Noun from wiktionary
+        """
+        wk = get_wikitext(german, 'de')
+        wk = wk.sections[1]
+        for template in wk.templates:
+            if ('Substantiv Übersicht') in template.name:
+                temp = dictify_template(template)
+                return standardize_german_noun_json(temp)
+
 
 class Exercise(models.Model):
     """The exercise motherclass"""
@@ -177,7 +192,7 @@ class ExAAS(Exercise):
         exercise = cls(chapter=noun.chapter,
                        czech=noun.dec['sacc'],
                        german='Ich sehe {} {}.'.format(german_article(noun.gender_de, 'akkusativ'),
-                                                       noun.german),
+                                                       noun.de['sacc'][0]),
                        content=noun)
         exercise.save()
 
@@ -196,6 +211,6 @@ class ExLNS(Exercise):
         exercise = cls(chapter=noun.chapter,
                        czech=noun.dec['sloc'],
                        german='Ich spreche über {} {}.'.format(german_article(noun.gender_de, 'akkusativ'),
-                                                               noun.german),
+                                                               noun.de['sacc'][0]),
                        content=noun)
         exercise.save()

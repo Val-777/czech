@@ -89,3 +89,38 @@ def german_article(gender_de, case):
         return feminine[case]
     elif gender_de is 'N':
         return neutral[case]
+
+
+def standardize_german_noun_json(dic_temp):
+    """
+    Standardize German noun after dictifying
+    """
+    output = {}
+    output['snom'] = dic_temp['Nominativ Singular']
+    if 'Nominativ Singular*' in dic_temp:
+        output['snom'].append(dic_temp['Nominativ Singular*'][0])
+    output['sacc'] = dic_temp['Akkusativ Singular']
+    if 'Akkusativ Singular*' in dic_temp:
+        output['sacc'].append(dic_temp['Akkusativ Singular*'][0])
+    output['sdat'] = dic_temp['Dativ Singular']
+    if 'Dativ Singular*' in dic_temp:
+        output['sdat'].append(dic_temp['Dativ Singular*'][0])
+    output['sgen'] = dic_temp['Genitiv Singular']
+    if 'Genitiv Singular*' in dic_temp:
+        output['sgen'].append(dic_temp['Genitiv Singular*'][0])
+
+    output['pnom'] = dic_temp['Nominativ Plural']
+    if 'Nominativ Plural*' in dic_temp:
+        output['pnom'].append(dic_temp['Nominativ Plural*'][0])
+    output['pacc'] = dic_temp['Akkusativ Plural']
+    if 'Akkusativ Plural*' in dic_temp:
+        output['pacc'].append(dic_temp['Akkusativ Plural*'][0])
+    output['pdat'] = dic_temp['Dativ Plural']
+    if 'Dativ Plural*' in dic_temp:
+        output['pdat'].append(dic_temp['Dativ Plural*'][0])
+    output['pgen'] = dic_temp['Genitiv Plural']
+    if 'Genitiv Plural*' in dic_temp:
+        output['pgen'].append(dic_temp['Genitiv Plural*'][0])
+
+    output['genus'] = dic_temp['Genus'][0]
+    return output

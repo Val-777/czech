@@ -7,7 +7,7 @@ import json
 import sys
 
 from .forms import WordForm, NounForm, ExNNSForm, ExAASForm, ExLNSForm  # noqa: F401
-from .models import Word, ExNNS, ExAAS, ExLNS
+from .models import Word, Noun, ExNNS, ExAAS, ExLNS
 from .serializers import ExNNSSerializer, ExAASSerializer, ExLNSSerializer  # noqa: F401
 # from .utils import update_attrs
 
@@ -33,9 +33,12 @@ def add(request):
         if form.is_valid():
             czech_word = form.cleaned_data['czech']
             json_word = Word.get_czech_word_json(czech_word)
+            de_json = Noun.get_german_word_json(json_word['german'])
+            json_word['de'] = de_json
             word_type = json_word.pop('type', None)
             request.session['json_word'] = json_word
-            print(json_word)
+            # print(json_word)
+            # print(de_json)
             return redirect('add_' + word_type.lower())
     else:
         form = WordForm()
@@ -47,10 +50,7 @@ def add_noun(request):
         form = NounForm(request.POST)
         if form.is_valid():
             word = form.save()
-            # (form.cleaned_data['chapter'])
-            # json_word = Word.get_word_json(czech_word)
 
-            # word = Word.get_word_type_class(word_type)(**json_word)
             word.save()
             ExNNS.make_new(word)
             ExAAS.make_new(word)
