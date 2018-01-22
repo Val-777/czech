@@ -36,8 +36,8 @@ class Word(models.Model):
             return 'Unknown'
 
     @staticmethod
-    def get_word_json(czech):
-        wk = get_wikitext(czech)
+    def get_czech_word_json(czech):
+        wk = get_wikitext(czech, 'cs')
         word = {'czech': czech}
         for section in wk.sections:
             if 'čeština' in section.title:

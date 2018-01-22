@@ -32,7 +32,7 @@ def add(request):
         form = WordForm(request.POST)
         if form.is_valid():
             czech_word = form.cleaned_data['czech']
-            json_word = Word.get_word_json(czech_word)
+            json_word = Word.get_czech_word_json(czech_word)
             word_type = json_word.pop('type', None)
             request.session['json_word'] = json_word
             print(json_word)

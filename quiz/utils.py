@@ -21,20 +21,20 @@ def dictify_template(templ):
     return output
 
 
-def get_wikitext(czech):
+def get_wikitext(word, language):
     """
     Gets the wikitext for the passed in Czech word, which is then parsed with the wikitextparser,
     which breaks it up into a list of Section objects
     """
-    czech = urllib.parse.quote(czech)
-    QUERY = ("https://cs.wiktionary.org/w/api.php?"
+    word = urllib.parse.quote(word)
+    QUERY = ("https://{}.wiktionary.org/w/api.php?"
              "action=parse&"
              "format=json&"
-             "uselang=cs&"
+             "uselang={}&"
              "page={}&"
              "prop=wikitext&"
              "utf8=1&"
-             "formatversion=1").format(czech)
+             "formatversion=1").format(language, language, word)
     with urlopen(QUERY) as url:
         http_info = url.info()
         raw_data = url.read().decode(http_info.get_content_charset())
