@@ -32,13 +32,10 @@ def add(request):
         form = WordForm(request.POST)
         if form.is_valid():
             czech_word = form.cleaned_data['czech']
-            json_word = Word.get_czech_word_json(czech_word)
-            de_json = Noun.get_german_word_json(json_word['german'])
-            json_word['de'] = de_json
-            word_type = json_word.pop('type', None)
-            request.session['json_word'] = json_word
-            # print(json_word)
-            # print(de_json)
+            word = Word.get_czech_word_type_and_wiki(czech_word)
+            word_type = word.pop('type', None)
+            word.pop('wk', None)
+            request.session['word'] = word
             return redirect('add_' + word_type.lower())
     else:
         form = WordForm()
@@ -57,7 +54,11 @@ def add_noun(request):
             ExLNS.make_new(word)
             return redirect('add')
     else:
-        form = NounForm(initial=request.session['json_word'])
+        czech_word = request.session['word']['czech']
+        word = Word.get_czech_word_type_and_wiki(czech_word)
+        word_json = Noun.make_czech_noun_json(word)
+        word_json['de'] = Noun.make_german_word_json(word_json['german'])
+        form = NounForm(initial=word_json)
     return render(request, 'quiz/new_noun.html', {'form': form})
 
 

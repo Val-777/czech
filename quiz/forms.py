@@ -4,14 +4,14 @@ from django import forms
 
 from .models import Noun
 
-MASCULINE = 'M'
-FEMININE = 'F'
-NEUTER = 'N'
-GENDER_CHOICES = (
-    (MASCULINE, 'Masculine'),
-    (FEMININE, 'Feminine'),
-    (NEUTER, 'Neuter'),
-)
+# MASCULINE = 'M'
+# FEMININE = 'F'
+# NEUTER = 'N'
+# GENDER_CHOICES = (
+#     (MASCULINE, 'Masculine'),
+#     (FEMININE, 'Feminine'),
+#     (NEUTER, 'Neuter'),
+# )
 
 
 class WordForm(forms.Form):
@@ -30,14 +30,14 @@ class NounForm(ModelForm):
         model = Noun
         fields = '__all__'   # ['czech', 'chapter']
         # exclude = ['artikel']
-        widgets = {
-            'gender_cz': RadioSelect(attrs={
-                'choices': GENDER_CHOICES,
-            }),
-            'gender_de': RadioSelect(attrs={
-                'choices': GENDER_CHOICES,
-            }),
-        }
+        # widgets = {
+        #     'gender_cz': RadioSelect(attrs={
+        #         'choices': GENDER_CHOICES,
+        #     }),
+        #     'gender_de': RadioSelect(attrs={
+        #         'choices': GENDER_CHOICES,
+        #     }),
+        # }
 
 
 class ExNNSForm(forms.Form):

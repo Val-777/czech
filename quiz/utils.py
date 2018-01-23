@@ -109,16 +109,31 @@ def standardize_german_noun_json(dic_temp):
     if 'Genitiv Singular*' in dic_temp:
         output['sgen'].append(dic_temp['Genitiv Singular*'][0])
 
-    output['pnom'] = dic_temp['Nominativ Plural']
+    if 'Nominativ Plural' in dic_temp:
+        output['pnom'] = dic_temp['Nominativ Plural']
+    elif 'Nominativ Plural 1' in dic_temp:
+        output['pnom'] = dic_temp['Nominativ Plural 1']
     if 'Nominativ Plural*' in dic_temp:
         output['pnom'].append(dic_temp['Nominativ Plural*'][0])
-    output['pacc'] = dic_temp['Akkusativ Plural']
+
+    if 'Akkusativ Plural' in dic_temp:
+        output['pacc'] = dic_temp['Akkusativ Plural']
+    elif 'Akkusativ Plural 1' in dic_temp:
+        output['pacc'] = dic_temp['Akkusativ Plural 1']
     if 'Akkusativ Plural*' in dic_temp:
         output['pacc'].append(dic_temp['Akkusativ Plural*'][0])
-    output['pdat'] = dic_temp['Dativ Plural']
+
+    if 'Dativ Plural' in dic_temp:
+        output['pdat'] = dic_temp['Dativ Plural']
+    elif 'Dativ Plural 1' in dic_temp:
+        output['pdat'] = dic_temp['Dativ Plural 1']
     if 'Dativ Plural*' in dic_temp:
         output['pdat'].append(dic_temp['Dativ Plural*'][0])
-    output['pgen'] = dic_temp['Genitiv Plural']
+
+    if 'Genitiv Plural' in dic_temp:
+        output['pgen'] = dic_temp['Genitiv Plural']
+    elif 'Genitiv Plural 1' in dic_temp:
+        output['pgen'] = dic_temp['Genitiv Plural 1']
     if 'Genitiv Plural*' in dic_temp:
         output['pgen'].append(dic_temp['Genitiv Plural*'][0])
 
