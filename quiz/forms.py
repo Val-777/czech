@@ -65,3 +65,10 @@ class ExLNSForm(forms.Form):
         label='Mluvím o ...',
         help_text='Tschechische Übersetzung hier eingeben',
     )
+
+
+class ExIIVForm(forms.Form):
+    czech = forms.CharField(
+        # label='Mluvím o ...',
+        help_text='Tschechische Übersetzung hier eingeben',
+    )

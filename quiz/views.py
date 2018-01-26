@@ -6,9 +6,9 @@ from django.http import Http404
 import json
 import sys
 
-from .forms import WordForm, NounForm, VerbForm, ExNNSForm, ExAASForm, ExLNSForm  # noqa: F401
-from .models import Word, Noun, Verb, ExNNS, ExAAS, ExLNS
-from .serializers import ExNNSSerializer, ExAASSerializer, ExLNSSerializer  # noqa: F401
+from .forms import WordForm, NounForm, VerbForm, ExNNSForm, ExAASForm, ExLNSForm, ExIIVForm  # noqa: F401
+from .models import Word, Noun, Verb, ExNNS, ExAAS, ExLNS, ExIIV
+from .serializers import ExNNSSerializer, ExAASSerializer, ExLNSSerializer, ExIIVSerializer  # noqa: F401
 # from .utils import update_attrs
 
 
@@ -68,6 +68,7 @@ def add_verb(request):
         if form.is_valid():
             word = form.save()
             word.save()
+            ExIIV.make_new(word)
             return redirect('add')
     else:
         czech_word = request.session['word']['czech']

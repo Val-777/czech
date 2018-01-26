@@ -270,3 +270,21 @@ class ExLNS(Exercise):
                                                                noun.de['sacc'][0]),
                        content=noun)
         exercise.save()
+
+
+class ExIIV(Exercise):
+    """
+    The exercise for learning verb translations
+    """
+    content = models.ForeignKey(Verb,
+                                models.CASCADE,
+                                blank=False,
+                                null=False,)
+
+    @classmethod
+    def make_new(cls, verb):
+        exercise = cls(chapter=verb.chapter,
+                       czech=verb.czech,
+                       german=verb.german,
+                       content=verb)
+        exercise.save()
