@@ -6,8 +6,8 @@ from django.http import Http404
 import json
 import sys
 
-from .forms import WordForm, NounForm, ExNNSForm, ExAASForm, ExLNSForm  # noqa: F401
-from .models import Word, Noun, ExNNS, ExAAS, ExLNS
+from .forms import WordForm, NounForm, VerbForm, ExNNSForm, ExAASForm, ExLNSForm  # noqa: F401
+from .models import Word, Noun, Verb, ExNNS, ExAAS, ExLNS
 from .serializers import ExNNSSerializer, ExAASSerializer, ExLNSSerializer  # noqa: F401
 # from .utils import update_attrs
 
@@ -59,6 +59,27 @@ def add_noun(request):
         word_json = Noun.make_czech_noun_json(word)
         word_json['de'] = Noun.make_german_word_json(word_json['german'])
         form = NounForm(initial=word_json)
+    return render(request, 'quiz/new_noun.html', {'form': form})
+
+
+def add_verb(request):
+    if request.method == 'POST':
+        pass
+        # form = NounForm(request.POST)
+        # if form.is_valid():
+        #     word = form.save()
+
+        #     word.save()
+        #     ExNNS.make_new(word)
+        #     ExAAS.make_new(word)
+        #     ExLNS.make_new(word)
+        #     return redirect('add')
+    else:
+        czech_word = request.session['word']['czech']
+        word = Word.get_czech_word_type_and_wiki(czech_word)
+        word_json = Verb.make_czech_verb_json(word)
+        word_json['de'] = Verb.make_german_verb_json(word_json['german'])
+        form = VerbForm(initial=word_json)
     return render(request, 'quiz/new_noun.html', {'form': form})
 
 

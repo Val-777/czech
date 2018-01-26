@@ -83,11 +83,11 @@ def german_article(gender_de, case):
         'dativ': 'dem',
         'akkusativ': 'das',
     }
-    if gender_de is 'M':
+    if gender_de is 'm':
         return masculine[case]
-    elif gender_de is 'F':
+    elif gender_de is 'f':
         return feminine[case]
-    elif gender_de is 'N':
+    elif gender_de is 'n':
         return neutral[case]
 
 
@@ -138,4 +138,26 @@ def standardize_german_noun_json(dic_temp):
         output['pgen'].append(dic_temp['Genitiv Plural*'][0])
 
     output['genus'] = dic_temp['Genus'][0]
+    return output
+
+
+def standardize_german_verb_json(dic_temp):
+    """
+    Standardize German verb after dictifying
+    """
+    output = {}
+    output['spre1'] = dic_temp['Präsens_ich']
+    if 'Präsens_ich*' in dic_temp:
+        output['spre1'].append(dic_temp['Präsens_ich*'][0])
+    output['spre2'] = dic_temp['Präsens_du']
+    if 'Präsens_du*' in dic_temp:
+        output['spre2'].append(dic_temp['Präsens_du*'][0])
+    output['spre3'] = dic_temp['Präsens_er, sie, es']
+    if 'Präsens_er, sie, es*' in dic_temp:
+        output['spre3'].append(dic_temp['Präsens_er, sie, es*'][0])
+    output['ppre1'] = [dic_temp['german'], ]
+    output['ppre2'] = output['spre3']
+    output['ppre3'] = [dic_temp['german'], ]
+    output['aux'] = dic_temp['Hilfsverb']
+
     return output

@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^$', quiz_views.home, name='home'),
     url(r'^add/', quiz_views.add, name='add'),
     url(r'^add_noun/', quiz_views.add_noun, name='add_noun'),
+    url(r'^add_verb/', quiz_views.add_verb, name='add_verb'),
     url(r'^admin/', admin.site.urls),
     path('get_exercise/<slug:kind>/',
          quiz_views.get_exercise, name='get_exercise'),

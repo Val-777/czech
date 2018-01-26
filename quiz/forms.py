@@ -1,8 +1,8 @@
 from django.forms import ModelForm
-from django.forms.widgets import RadioSelect
+from django.forms.widgets import RadioSelect  # noqa: F401
 from django import forms
 
-from .models import Noun
+from .models import Noun, Verb
 
 # MASCULINE = 'M'
 # FEMININE = 'F'
@@ -38,6 +38,12 @@ class NounForm(ModelForm):
         #         'choices': GENDER_CHOICES,
         #     }),
         # }
+
+
+class VerbForm(ModelForm):
+    class Meta:
+        model = Verb
+        fields = '__all__'
 
 
 class ExNNSForm(forms.Form):

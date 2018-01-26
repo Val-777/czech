@@ -8,6 +8,7 @@ from .utils import (dictify_template,
                     get_wikitext,
                     german_article,
                     standardize_german_noun_json,
+                    standardize_german_verb_json,
                     )
 
 
@@ -143,6 +144,53 @@ class Noun(Word):
                 return standardize_german_noun_json(temp)
 
 
+class Verb(Word):
+    """
+    The Verb class
+    """
+
+    imperfect = models.NullBooleanField()
+
+    cz = JSONField(blank=True)
+
+    de = JSONField(blank=True)
+
+    @staticmethod
+    def make_czech_verb_json(word):
+        wk = word['wk']
+        output = {'czech': word['czech']}
+        for section in wk.sections:
+            if 'časování' in section.title:
+                for template in section.templates:
+                    if 'Sloveso (cs)' in template.name:
+                        output['cz'] = dictify_template(template)
+            if 'čeština' in section.title:
+                templates = []
+                for template in section.templates:
+                    if 'Překlady' in template.name:
+                        templates.append(dictify_template(template))
+                template = max(templates, key=(
+                    lambda dic: len(dic.keys())))
+                de = template['de']
+                de_list = de[0].split(', ')[0].strip('{}').split('|')
+                output['german'] = de_list[2]
+        return output
+
+    @staticmethod
+    def make_german_verb_json(german):
+        """
+        Get JSON representation of German Noun from wiktionary
+        """
+        wk = get_wikitext(german, 'de')
+        for section in wk.sections:
+            if 'Verb' in section.title:
+                for template in section.templates:
+                    if 'Verb Übersicht' in template.name:
+                        temp = dictify_template(template)
+                        temp['german'] = 'wohnen'
+                        return standardize_german_verb_json(temp)
+
+
 class Exercise(models.Model):
     """The exercise motherclass"""
     chapter = models.PositiveIntegerField(blank=True, null=True)
@@ -179,9 +227,9 @@ class ExNNS(Exercise):
     @classmethod
     def make_new(cls, noun):
         exercise = cls(chapter=noun.chapter,
-                       czech=noun.czech,
-                       german='{} {}'.format(german_article(noun.gender_de, 'nominativ'),
-                                             noun.german),
+                       czech=noun.cz['snom'],
+                       german='{} {}'.format(german_article(noun.de['genus'], 'nominativ'),
+                                             noun.de['snom'][0]),
                        content=noun)
         exercise.save()
 
@@ -198,8 +246,8 @@ class ExAAS(Exercise):
     @classmethod
     def make_new(cls, noun):
         exercise = cls(chapter=noun.chapter,
-                       czech=noun.dec['sacc'],
-                       german='Ich sehe {} {}.'.format(german_article(noun.gender_de, 'akkusativ'),
+                       czech=noun.cz['sacc'],
+                       german='Ich sehe {} {}.'.format(german_article(noun.de['genus'], 'akkusativ'),
                                                        noun.de['sacc'][0]),
                        content=noun)
         exercise.save()
@@ -217,8 +265,8 @@ class ExLNS(Exercise):
     @classmethod
     def make_new(cls, noun):
         exercise = cls(chapter=noun.chapter,
-                       czech=noun.dec['sloc'],
-                       german='Ich spreche über {} {}.'.format(german_article(noun.gender_de, 'akkusativ'),
+                       czech=noun.cz['sloc'],
+                       german='Ich spreche über {} {}.'.format(german_article(noun.de['genus'], 'akkusativ'),
                                                                noun.de['sacc'][0]),
                        content=noun)
         exercise.save()
