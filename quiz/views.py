@@ -75,7 +75,7 @@ def add_verb(request):
         word_json = Verb.make_czech_verb_json(word)
         word_json['de'] = Verb.make_german_verb_json(word_json['german'])
         form = VerbForm(initial=word_json)
-    return render(request, 'quiz/new_noun.html', {'form': form})
+    return render(request, 'quiz/new_verb.html', {'form': form})
 
 
 def get_exercise(request, kind):
