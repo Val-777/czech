@@ -64,16 +64,11 @@ def add_noun(request):
 
 def add_verb(request):
     if request.method == 'POST':
-        pass
-        # form = NounForm(request.POST)
-        # if form.is_valid():
-        #     word = form.save()
-
-        #     word.save()
-        #     ExNNS.make_new(word)
-        #     ExAAS.make_new(word)
-        #     ExLNS.make_new(word)
-        #     return redirect('add')
+        form = VerbForm(request.POST)
+        if form.is_valid():
+            word = form.save()
+            word.save()
+            return redirect('add')
     else:
         czech_word = request.session['word']['czech']
         word = Word.get_czech_word_type_and_wiki(czech_word)
