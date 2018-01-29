@@ -191,8 +191,24 @@ class Verb(Word):
                         return standardize_german_verb_json(temp)
 
 
+class PersPronoun(Word):
+    """
+    The Personal Pronoun class
+    """
+    cz = JSONField(blank=True)
+    de = JSONField(blank=True)
+
+    @staticmethod
+    def random(cls):
+        last = cls.objects.count() - 1
+        index1 = random.randint(0, last)
+        return cls.objects.all()[index1]
+
+
 class Exercise(models.Model):
-    """The exercise motherclass"""
+    """
+    The exercise motherclass
+    """
     chapter = models.PositiveIntegerField(blank=True, null=True)
     czech = models.CharField(unique=True, max_length=120, blank=False)
     german = models.CharField(max_length=120, blank=False)
