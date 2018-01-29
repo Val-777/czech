@@ -94,13 +94,11 @@ def get_exercise(request, kind):
         body = json.loads(request.body.decode("utf-8").replace("'", '"'))
         ex = getattr(sys.modules[__name__], kind)
         database = get_object_or_404(ex, german=body['german'])
-
-        status = (body['answer'] is database.czech) or (
-            body['answer'] in database.czech)
-        if ',' not in database.czech:
-            correct_answer = database.czech[2:-2]
-        else:
-            correct_answer = database.czech[2:-2].split("', '")
+        db_czech = database.czech[2:-2].split("', '")
+        status = body['answer'] in db_czech
+        if len(db_czech) > 1:
             correct_answer = '{} oder {}'.format(
-                correct_answer[0], correct_answer[1])
+                db_czech[0], db_czech[1])
+        else:
+            correct_answer = db_czech[0]
         return JsonResponse({'status': status, 'correct_answer': correct_answer})
