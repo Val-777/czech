@@ -97,8 +97,8 @@ def get_exercise(request, kind):
 
         status = (body['answer'] is database.czech) or (
             body['answer'] in database.czech)
-        if '[' not in database.czech:
-            correct_answer = database.czech
+        if ',' not in database.czech:
+            correct_answer = database.czech[2:-2]
         else:
             correct_answer = database.czech[2:-2].split("', '")
             correct_answer = '{} oder {}'.format(
