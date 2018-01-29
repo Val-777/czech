@@ -284,7 +284,7 @@ class ExIIV(Exercise):
     @classmethod
     def make_new(cls, verb):
         exercise = cls(chapter=verb.chapter,
-                       czech=verb.czech,
+                       czech=[verb.czech, ],
                        german=verb.german,
                        content=verb)
         exercise.save()
