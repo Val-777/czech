@@ -63,7 +63,15 @@ $(function () {
       if (result.status === true) {
         $(".alert-success").fadeIn(1000)
       } else {
-        $("#correct_answer").text(result.correct_answer);
+        if (result.correct_answer.length > 1) {
+          const solutions = [];
+          result.correct_answer.forEach(function (solution) {
+            solutions.push('<b>' + solution + '</b>');
+          });
+          $("#correct_answer").html(solutions.join(' oder '));
+        } else {
+          $("#correct_answer").html('<b>' + result.correct_answer + '</b>');
+        }
         $(".alert-danger").fadeIn(1000);
       }
     })

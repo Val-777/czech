@@ -96,9 +96,4 @@ def get_exercise(request, kind):
         database = get_object_or_404(ex, german=body['german'])
         db_czech = database.czech[2:-2].split("', '")
         status = body['answer'] in db_czech
-        if len(db_czech) > 1:
-            correct_answer = '{} oder {}'.format(
-                db_czech[0], db_czech[1])
-        else:
-            correct_answer = db_czech[0]
-        return JsonResponse({'status': status, 'correct_answer': correct_answer})
+        return JsonResponse({'status': status, 'correct_answer': db_czech})
