@@ -72,3 +72,10 @@ class ExIIVForm(forms.Form):
         label='',
         help_text='Tschechische Übersetzung hier eingeben',
     )
+
+
+class ExKKVForm(forms.Form):
+    czech = forms.CharField(
+        label='',
+        help_text='Tschechische Übersetzung hier eingeben',
+    )

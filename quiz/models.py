@@ -197,6 +197,7 @@ class PersPronoun(Word):
     """
     cz = JSONField(blank=True)
     de = JSONField(blank=True)
+    role = models.CharField(max_length=10, blank=False)
 
     @staticmethod
     def random(cls):
@@ -210,7 +211,7 @@ class Exercise(models.Model):
     The exercise motherclass
     """
     chapter = models.PositiveIntegerField(blank=True, null=True)
-    czech = models.CharField(unique=True, max_length=120, blank=False)
+    czech = models.CharField(max_length=120, blank=False)
     german = models.CharField(max_length=120, blank=False)
 
     @classmethod
@@ -304,3 +305,24 @@ class ExIIV(Exercise):
                        german=verb.german,
                        content=verb)
         exercise.save()
+
+
+class ExKKV(Exercise):
+    """
+    The exercise for learning conjugations
+    """
+    content = models.ForeignKey(Verb,
+                                models.CASCADE,
+                                blank=False,
+                                null=False,)
+
+    @classmethod
+    def make_new(cls, verb):
+        pronouns = PersPronoun.objects.all()
+        for pronoun in pronouns:
+            role = pronoun.role[0] + 'pre' + pronoun.role[1]
+            exercise = cls(chapter=verb.chapter,
+                           czech=verb.cz[role],
+                           german=pronoun.german + ' ' + verb.de[role][0],
+                           content=verb)
+            exercise.save()
