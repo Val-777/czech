@@ -92,9 +92,10 @@ def get_exercise(request, kind):
 
         return JsonResponse(serializer.data)
     elif request.method == 'POST':
+        ex_id = request.COOKIES.get('id')
         body = json.loads(request.body.decode("utf-8").replace("'", '"'))
         ex = getattr(sys.modules[__name__], kind)
-        database = get_object_or_404(ex, german=body['german'])
+        database = get_object_or_404(ex, id=ex_id)
         db_czech = database.czech[2:-2].split("', '")
         status = body['answer'] in db_czech
         return JsonResponse({'status': status, 'correct_answer': db_czech})

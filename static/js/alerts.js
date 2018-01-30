@@ -1,6 +1,8 @@
 async function getExercise(api_url) {
   const response = await fetch(api_url, {
     method: 'GET',
+    credentials: "same-origin",
+    // credentials: 'include',
   });
   const json = await response.json();
   return json;
@@ -25,6 +27,7 @@ function getCookie(cname) {
 async function checkExercise(data, api_url) {
   const request = {
     credentials: "same-origin",
+    // credentials: 'include',
     method: 'POST',
     headers: {
       "X-CSRFToken": getCookie("csrftoken"),
@@ -42,6 +45,16 @@ async function checkExercise(data, api_url) {
   return json;
 }
 
+function setCookie(name, value, days) {
+  var expires = "";
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
 $(function () {
   const exercise_type = $(location).attr('pathname').split('/').reverse()[1];
   $('#' + exercise_type).toggleClass('list-group-item-info');
@@ -50,6 +63,7 @@ $(function () {
     $(".js-german").text(exercise.german);
     $("#checkbtn, #id_czech").prop('disabled', false);
     $("#id_czech").focus();
+    setCookie("id", exercise.id, 1);
   });
 
   $("#answer_form").submit(function (e) {
@@ -93,6 +107,7 @@ $(function () {
         $(".js-german").text(exercise.german).slideDown("slow");
         $("#checkbtn, #id_czech").prop('disabled', false);
         $("#id_czech").focus();
+        setCookie("id", exercise.id, 1);
       });
     });
   });
