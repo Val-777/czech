@@ -187,7 +187,7 @@ class Verb(Word):
                 for template in section.templates:
                     if 'Verb Übersicht' in template.name:
                         temp = dictify_template(template)
-                        temp['german'] = 'wohnen'
+                        temp['german'] = german
                         return standardize_german_verb_json(temp)
 
 
