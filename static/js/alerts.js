@@ -55,24 +55,22 @@ function setCookie(name, value, days) {
   document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
+function readyForInput(exercise) {
+  $(".js-german").text(exercise.german).slideDown("slow");
+  $("#checkbtn, #id_czech").prop('disabled', false);
+  $("#id_czech").focus();
+  setCookie("id", exercise.id, 1);
+}
+
 $(function () {
   const exercise_type = $(location).attr('pathname').split('/').reverse()[1];
   $('#' + exercise_type).toggleClass('list-group-item-info');
   const api_url = '/get_exercise/' + exercise_type + '/'
-  getExercise(api_url).then(function (exercise) {
-    $(".js-german").text(exercise.german);
-    $("#checkbtn, #id_czech").prop('disabled', false);
-    $("#id_czech").focus();
-    setCookie("id", exercise.id, 1);
-  });
-
+  getExercise(api_url).then(exercise => readyForInput(exercise));
   $("#answer_form").submit(function (e) {
     $("#checkbtn, #id_czech").prop('disabled', true);
     e.preventDefault();
-    answer = $("#id_czech").val();
-    question = $(".js-german").text();
-
-    options = { answer: answer, german: question }
+    options = { answer: $("#id_czech").val() }
     checkExercise(options, api_url).then(function (result) {
       if (result.status === true) {
         $(".alert-success").fadeIn(1000)
@@ -103,12 +101,7 @@ $(function () {
     $("#id_czech").val("");
     $(".alert").fadeOut(1000);
     $(".js-german").slideUp("slow", function () {
-      getExercise(api_url).then(function (exercise) {
-        $(".js-german").text(exercise.german).slideDown("slow");
-        $("#checkbtn, #id_czech").prop('disabled', false);
-        $("#id_czech").focus();
-        setCookie("id", exercise.id, 1);
-      });
+      getExercise(api_url).then(exercise => readyForInput(exercise));
     });
   });
 })
