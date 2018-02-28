@@ -134,3 +134,158 @@ def standardize_german_verb_json(dic_temp):
     output['aux'] = dic_temp['Hilfsverb']
 
     return output
+
+
+def get_wikitext_extended(verb):
+    """
+    Gets wikitext with expanded templates, used for getting Flexion:<Verb> for
+    German verbs
+    """
+    verb = urllib.parse.quote(verb)
+    QUERY = ("https://de.wiktionary.org/w/api.php?"
+             "action=parse&"
+             "format=json&"
+             "page={}&"
+             "prop=wikitext&"
+             "utf8=1&"
+             "redirects&"
+             "formatversion=1").format(verb)
+    with urlopen(QUERY) as url:
+        http_info = url.info()
+        raw_data = url.read().decode(http_info.get_content_charset())
+    project_info = json.loads(raw_data)
+    result = {'headers': http_info.items(), 'body': project_info}
+    wikitext = result['body']['parse']['wikitext']['*']
+
+    wikitext = urllib.parse.quote(wikitext)
+    QUERY = ("https://de.wiktionary.org/w/api.php?"
+             "action=expandtemplates&"
+             "format=json&"
+             "utf8=1&"
+             "text={}&"
+             "prop=wikitext&").format(wikitext)
+    with urlopen(QUERY) as url:
+        http_info = url.info()
+        raw_data = url.read().decode(http_info.get_content_charset())
+    project_info = json.loads(raw_data)
+    wk = project_info['expandtemplates']['wikitext']
+    return wk
+
+
+def get_flexion(word):
+    wk = wtp.parse(get_wikitext_extended('Flexion:{}'.format(word)))
+
+    PRESENT = '[[Hilfe:Präsens|Präsens]]'
+    PRETERITUM = '[[Hilfe:Präteritum|Präteritum]]'
+    FUTUR1 = '[[Hilfe:Futur|Futur I]]'
+
+    output = {
+        "present":
+        {"active": {
+            "indicative": {
+                "0": '',
+                "1": '',
+                "2": '',
+                "3": '',
+                "4": '',
+                "5": ''
+            }
+        }},
+            "preterite":
+                {"active": {
+                    "indicative": {
+                        "0": '',
+                        "1": '',
+                        "2": '',
+                        "3": '',
+                        "4": '',
+                        "5": ''
+                    }
+                }},
+            "futur1":
+                {"active": {
+                    "indicative": {
+                        "0": '',
+                        "1": '',
+                        "2": '',
+                        "3": '',
+                        "4": '',
+                        "5": ''
+                    }
+                }
+        }}
+
+    for section in wk.sections:
+        if 'Indikativ' in section.title:
+            for table in section.tables:
+                for i in range(len(table.data())):
+                    if PRESENT in table.data()[i][0]:
+                        for ind in range(len(table.data()[i + 2])):
+                            if 'Indikativ' in table.data()[i + 2][ind]:
+                                break
+                        for j in range(6):
+                            word = table.data()[i + 3 + j][ind].split(' ')[-1]
+                            output["present"]["active"]["indicative"][str(
+                                j)] = word
+
+                    if PRETERITUM in table.data()[i][0]:
+                        for ind in range(len(table.data()[i + 2])):
+                            if 'Indikativ' in table.data()[i + 2][ind]:
+                                break
+                        for j in range(6):
+                            word = table.data()[i + 3 + j][ind].split(' ')[-1]
+                            output["preterite"]["active"]["indicative"][str(
+                                j)] = word
+
+                    if FUTUR1 in table.data()[i][0]:
+                        for ind in range(len(table.data()[i + 2])):
+                            if 'Indikativ' in table.data()[i + 2][ind]:
+                                break
+                        for j in range(6):
+                            word = table.data()[i + 3 + j][ind].split(' ')
+                            word = word[-2] + ' ' + word[-1]
+                            output["futur1"]["active"]["indicative"][str(
+                                j)] = word
+    return output
+
+
+def normalize_czech_verb_flexion(t):
+    output = {
+        "present": {
+            "0": t['spre1'],
+            "1": t['spre2'],
+            "2": t['spre3'],
+            "3": t['ppre1'],
+            "4": t['ppre2'],
+            "5": t['ppre3']},
+        "imperative": {
+            "s": t['simp2'],
+            "p": t['pimp2'],
+            "1pp": t['pimp1'],
+        },
+        "participle": {
+            "active": {
+                "sm": t['sactm'],
+                "sf": t['sactf'],
+                "sn": t['sactn'],
+                "pm": t['pactm'],
+                "pf": t['pactf'],
+                "pn": t['sactf'],
+            }}
+    }
+    if 'spasm' in t:
+        output['participle']["passive"] = {
+            "sm": t['spasm'],
+            "sf": t['spasf'],
+            "sn": t['spasn'],
+            "pm": t['ppasm'],
+            "pf": t['ppasf'],
+            "pn": t['spasf'],
+        }
+    if 'ptram' in t:
+        output['transgressive'] = {
+            "m": t['ptram'],
+            "f": t['ptraf'],
+            "p": t['ptrap'],
+        }
+    return output

@@ -5,8 +5,10 @@ import random
 
 from .utils import (dictify_template,
                     get_wikitext,
+                    get_flexion,
                     standardize_german_noun_json,
-                    standardize_german_verb_json,
+                    normalize_czech_verb_flexion,
+                    # standardize_german_verb_json,
                     )
 
 
@@ -161,7 +163,8 @@ class Verb(Word):
             if 'časování' in section.title:
                 for template in section.templates:
                     if 'Sloveso (cs)' in template.name:
-                        output['cz'] = dictify_template(template)
+                        output['cz'] = normalize_czech_verb_flexion(
+                            dictify_template(template))
             if 'čeština' in section.title:
                 templates = []
                 for template in section.templates:
@@ -177,27 +180,40 @@ class Verb(Word):
     @staticmethod
     def make_german_verb_json(german):
         """
-        Get JSON representation of German Noun from wiktionary
+        Get JSON representation of German Verb from wiktionary
         """
-        wk = get_wikitext(german, 'de')
-        for section in wk.sections:
-            if 'Verb' in section.title:
-                for template in section.templates:
-                    if 'Verb Übersicht' in template.name:
-                        temp = dictify_template(template)
-                        temp['german'] = german
-                        return standardize_german_verb_json(temp)
+
+        return get_flexion(german)
 
 
 class PersPronoun(Word):
     """
     The Personal Pronoun class
     """
-    cz = JSONField(blank=True)
-    de = JSONField(blank=True)
-    role = models.CharField(max_length=10, blank=False)
+    # cz = JSONField(blank=True)
+    # de = JSONField(blank=True)
+    role = models.PositiveIntegerField()
 
-    @staticmethod
+    P1S = 0
+    P2S = 1
+    P3S = 2
+    P1P = 3
+    P2P = 4
+    P3P = 5
+    ROLE_CHOICES = (
+        (P1S, '1st Sin'),
+        (P2S, '2nd Sin'),
+        (P3S, '3rd Sin'),
+        (P1P, '1st Plu'),
+        (P2P, '2nd Plu'),
+        (P3P, '3rd Plu'),
+    )
+    role = models.PositiveIntegerField(
+        choices=ROLE_CHOICES,
+        default=P1S,
+    )
+
+    @classmethod
     def random(cls):
         last = cls.objects.count() - 1
         index1 = random.randint(0, last)

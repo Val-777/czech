@@ -1,6 +1,7 @@
 from django.db import models
 
 import random
+from jsonfield import JSONField
 
 from addwords.models import Noun, Verb, PersPronoun
 from .utils import german_article
@@ -108,6 +109,7 @@ class ExKKV(Exercise):
     """
     The exercise for learning conjugations
     """
+    options = JSONField(blank=True)
     content = models.ForeignKey(Verb,
                                 models.CASCADE,
                                 blank=False,
@@ -115,11 +117,13 @@ class ExKKV(Exercise):
 
     @classmethod
     def make_new(cls, verb):
-        pronouns = PersPronoun.objects.all()
-        for pronoun in pronouns:
-            role = pronoun.role[0] + 'pre' + pronoun.role[1]
+        for i in range(6):
+            pronouns = PersPronoun.objects.filter(role=i)
+            opts = ",".join([p.german for p in pronouns])
             exercise = cls(chapter=verb.chapter,
-                           czech=verb.cz[role],
-                           german=pronoun.german + ' ' + verb.de[role][0],
+                           czech=verb.cz["present"][str(i)],
+                           german='OPT1' + ' ' +
+                           verb.de["present"]["active"]["indicative"][str(i)],
+                           options={"1": opts},
                            content=verb)
             exercise.save()

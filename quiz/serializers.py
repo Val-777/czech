@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import ExNNS, ExAAS, ExLNS, ExIIV, ExKKV
 
+import random
+
 
 class ExNNSSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,7 +28,16 @@ class ExIIVSerializer(serializers.ModelSerializer):
         fields = ('id', 'german')
 
 
+class ExKKVGermanField(serializers.RelatedField):
+    def to_representation(self, value):
+        pronouns = value.options['1'].split(',')
+        pronoun = random.choice(pronouns)
+        return value.german.replace('OPT1', pronoun)
+
+
 class ExKKVSerializer(serializers.ModelSerializer):
+    german = ExKKVGermanField(source='*', read_only=True)
+
     class Meta:
         model = ExKKV
         fields = ('id', 'german')
