@@ -7,9 +7,10 @@ import json
 import sys
 
 from addwords.models import Word, Noun, Verb  # noqa: F401
-from .forms import ExNNSForm, ExAASForm, ExLNSForm, ExIIVForm, ExKKVForm  # noqa: F401
-from .models import ExNNS, ExAAS, ExLNS, ExIIV, ExKKV  # noqa: F401
-from .serializers import ExNNSSerializer, ExAASSerializer, ExLNSSerializer, ExIIVSerializer, ExKKVSerializer  # noqa: F401
+from .forms import ExNNSForm, ExAASForm, ExLNSForm, ExIIVForm, ExKKVForm, ExPPVForm  # noqa: F401
+from .models import ExNNS, ExAAS, ExLNS, ExIIV, ExKKV, ExPPV  # noqa: F401
+from .serializers import (ExNNSSerializer, ExAASSerializer, ExLNSSerializer,  # noqa: F401
+                          ExIIVSerializer, ExKKVSerializer, ExPPVSerializer,)  # noqa: F401
 
 
 def home(request):
