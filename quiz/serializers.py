@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ExNNS, ExAAS, ExLNS, ExIIV, ExKKV
+from .models import ExNNS, ExAAS, ExLNS, ExIIV, ExKKV, ExPPV
 
 import random
 
@@ -40,4 +40,10 @@ class ExKKVSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExKKV
+        fields = ('id', 'german')
+
+
+class ExPPVSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExPPV
         fields = ('id', 'german')

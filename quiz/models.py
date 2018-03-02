@@ -127,3 +127,29 @@ class ExKKV(Exercise):
                            options={"1": opts},
                            content=verb)
             exercise.save()
+
+
+class ExPPV(Exercise):
+    """
+    The exercise for learning verb translations
+    """
+    content = models.ForeignKey(Verb,
+                                models.CASCADE,
+                                blank=False,
+                                null=False,)
+
+    @classmethod
+    def make_new(cls, verb):
+        for pronoun in PersPronoun.objects.all():
+            if pronoun.role in [0, 1, 2]:
+                czech = 's' + pronoun.gender
+            elif pronoun.role in [3, 4, 5]:
+                czech = 'p' + pronoun.gender
+            german = pronoun.german + '({}) '.format(pronoun.gender)
+            german += verb.de['present']['active']['indicative'][str(
+                pronoun.role)]
+            exercise = cls(chapter=verb.chapter,
+                           czech=verb.cz['participle']['active'][czech][0],
+                           german=german,
+                           content=verb)
+            exercise.save()

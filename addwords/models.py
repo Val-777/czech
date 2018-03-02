@@ -192,6 +192,7 @@ class PersPronoun(Word):
     """
     # cz = JSONField(blank=True)
     # de = JSONField(blank=True)
+    czech = models.CharField(max_length=12, blank=False)
     role = models.PositiveIntegerField()
 
     P1S = 0
@@ -212,6 +213,23 @@ class PersPronoun(Word):
         choices=ROLE_CHOICES,
         default=P1S,
     )
+
+    MALE = 'm'
+    FEMALE = 'f'
+    NEUTER = 'n'
+    GENDER_CHOICES = (
+        (MALE, 'Male'),
+        (FEMALE, 'Female'),
+        (NEUTER, 'Neuter'),
+    )
+    gender = models.CharField(
+        choices=GENDER_CHOICES,
+        default=MALE,
+        max_length=1,
+    )
+
+    def __str__(self):
+        return "{} ({}), {}".format(self.czech, self.role, self.gender)
 
     @classmethod
     def random(cls):
