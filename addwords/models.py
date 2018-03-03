@@ -8,6 +8,7 @@ from .utils import (dictify_template,
                     get_flexion,
                     standardize_german_noun_json,
                     normalize_czech_verb_flexion,
+                    check_futur_one,
                     # standardize_german_verb_json,
                     )
 
@@ -181,6 +182,7 @@ class Verb(Word):
                             output['imperfect'] = True
                         elif 'dokonavé' in section.contents:
                             output['imperfect'] = False
+        output = check_futur_one(output)
         return output
 
     @staticmethod

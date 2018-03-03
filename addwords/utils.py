@@ -289,7 +289,7 @@ def normalize_czech_verb_flexion(t):
             "p": t['ptrap'],
         }
     if 'sfut1' in t:
-        output["futur1"] = {
+        output["futur"] = {
             "0": t['sfut1'],
             "1": t['sfut2'],
             "2": t['sfut3'],
@@ -298,3 +298,17 @@ def normalize_czech_verb_flexion(t):
             "5": t['pfut3'],
         }
     return output
+
+
+def check_futur_one(czverb):
+    budet = ['budu', 'budeš', 'bude', 'budeme', 'budete', 'budou']
+    if 'futur' not in czverb['cz']:
+        futur = {}
+        for i in range(6):
+            futur[str(i)] = [budet[i] + ' ' +
+                             czverb['czech'], ] if czverb['imperfect'] else czverb['cz']['present'][str(
+                                 i)]
+        czverb['cz']['futur'] = futur
+        return czverb
+    else:
+        return czverb
