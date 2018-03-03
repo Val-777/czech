@@ -42,8 +42,14 @@ def get_wikitext(word, language):
     project_info = json.loads(raw_data)
     result = {'headers': http_info.items(), 'body': project_info}
 
-    wikitext = result['body']['parse']['wikitext']['*']
-    return wtp.parse(wikitext)
+    if 'error' in result['body']:
+        if result['body']['error']['code'] == 'missingtitle':
+            return {'error': 'Fehler: {}'.format('Wort wurde im tschechischen Wiktionary nicht gefunden!')}
+        else:
+            return {'error': 'Fehler: {}'.format(result['body']['error']['info'])}
+    else:
+        wikitext = result['body']['parse']['wikitext']['*']
+        return wtp.parse(wikitext)
 
 
 def update_attrs(instance, **kwargs):

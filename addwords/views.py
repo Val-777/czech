@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
+from django.http import Http404
 
 from .forms import WordForm, NounForm, VerbForm
 from .models import Word, Noun, Verb
 from quiz.models import ExNNS, ExAAS, ExLNS, ExIIV, ExKKV, ExPPV, ExFFV
+from .utils import get_wikitext
 
 
 def add(request):
@@ -10,11 +12,17 @@ def add(request):
         form = WordForm(request.POST)
         if form.is_valid():
             czech_word = form.cleaned_data['czech']
-            word = Word.get_czech_word_type_and_wiki(czech_word)
-            word_type = word.pop('type', None)
-            word.pop('wk', None)
-            request.session['word'] = word
-            return redirect('add_' + word_type.lower())
+            # word = Word.get_czech_word_type_and_wiki(czech_word)
+            wk = get_wikitext(czech_word, 'cz')
+            if 'error' not in wk:
+                word = Word.get_czech_word_type_and_wiki(czech_word, wk)
+                word_type = word.pop('type', None)
+                word.pop('wk', None)
+                request.session['word'] = word
+                return redirect('add_' + word_type.lower())
+            else:
+                print(wk['error'])
+                raise Http404(wk['error'])
     else:
         form = WordForm()
     return render(request, 'addwords/new_word.html', {'form': form})
@@ -33,7 +41,8 @@ def add_noun(request):
             return redirect('add')
     else:
         czech_word = request.session['word']['czech']
-        word = Word.get_czech_word_type_and_wiki(czech_word)
+        word = Word.get_czech_word_type_and_wiki(
+            czech_word, get_wikitext(czech_word, 'cz'))
         word_json = Noun.make_czech_noun_json(word)
         word_json['de'] = Noun.make_german_word_json(word_json['german'])
         form = NounForm(initial=word_json)
@@ -53,7 +62,8 @@ def add_verb(request):
             return redirect('add')
     else:
         czech_word = request.session['word']['czech']
-        word = Word.get_czech_word_type_and_wiki(czech_word)
+        word = Word.get_czech_word_type_and_wiki(
+            czech_word, get_wikitext(czech_word, 'cz'))
         word_json = Verb.make_czech_verb_json(word)
         word_json['de'] = Verb.make_german_verb_json(word_json['german'])
         form = VerbForm(initial=word_json)

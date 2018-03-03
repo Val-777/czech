@@ -39,10 +39,10 @@ class Word(models.Model):
             return 'Unknown'
 
     @staticmethod
-    def get_czech_word_type_and_wiki(czech):
-        wk = get_wikitext(czech, 'cs')
-        word = {'czech': czech, 'wk': wk}
-        for section in wk.sections:
+    def get_czech_word_type_and_wiki(czech, wikitext):
+        # wk = get_wikitext(czech, 'cs')
+        word = {'czech': czech, 'wk': wikitext}
+        for section in wikitext.sections:
             if 'čeština' in section.title:
                 if 'podstatné jméno' in section.contents:
                     word['type'] = 'Noun'
