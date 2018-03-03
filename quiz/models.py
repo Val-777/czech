@@ -145,9 +145,11 @@ class ExPPV(Exercise):
                 czech = 's' + pronoun.gender
             elif pronoun.role in [3, 4, 5]:
                 czech = 'p' + pronoun.gender
-            german = pronoun.german + '({}) '.format(pronoun.gender)
-            german += verb.de['preterite']['active']['indicative'][str(
-                pronoun.role)]
+            german = pronoun.german
+            if pronoun.role is not 2:
+                german += '({})'.format(pronoun.gender)
+            german += (' ' + verb.de['preterite']['active']['indicative'][str(
+                pronoun.role)])
             exercise = cls(chapter=verb.chapter,
                            czech=verb.cz['participle']['active'][czech],
                            german=german,
