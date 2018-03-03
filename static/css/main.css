@@ -10,6 +10,11 @@ body {
     height: 40px;
 }
 
+.slimcard{
+    padding: 1rem 1rem;
+    margin-bottom: 1rem;
+}
+
 .slimbotron {
     /* min-height: 100%;
     min-height: 100vh; */
@@ -31,8 +36,7 @@ body {
     display: none;
 }
 
-.alert-success,
-.alert-danger {
+.hidden {
     display: none;
 }
 

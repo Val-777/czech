@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import Http404
+# from django.http import Http404
 
 from .forms import WordForm, NounForm, VerbForm
 from .models import Word, Noun, Verb
@@ -8,11 +8,11 @@ from .utils import get_wikitext
 
 
 def add(request):
+    render_args = {}
     if request.method == 'POST':
         form = WordForm(request.POST)
         if form.is_valid():
             czech_word = form.cleaned_data['czech']
-            # word = Word.get_czech_word_type_and_wiki(czech_word)
             wk = get_wikitext(czech_word, 'cz')
             if 'error' not in wk:
                 word = Word.get_czech_word_type_and_wiki(czech_word, wk)
@@ -21,11 +21,11 @@ def add(request):
                 request.session['word'] = word
                 return redirect('add_' + word_type.lower())
             else:
-                print(wk['error'])
-                raise Http404(wk['error'])
+                render_args['error'] = wk['error']
     else:
         form = WordForm()
-    return render(request, 'addwords/new_word.html', {'form': form})
+    render_args['form'] = form
+    return render(request, 'addwords/new_word.html', render_args)
 
 
 def add_noun(request):
