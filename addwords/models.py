@@ -175,6 +175,12 @@ class Verb(Word):
                 de = template['de']
                 de_list = de[0].split(', ')[0].strip('{}').split('|')
                 output['german'] = de_list[2]
+                for s in section.sections:
+                    if 'sloveso' in s.title:
+                        if 'nedokonavé' in section.contents:
+                            output['imperfect'] = True
+                        elif 'dokonavé' in section.contents:
+                            output['imperfect'] = False
         return output
 
     @staticmethod

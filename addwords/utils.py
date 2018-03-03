@@ -288,4 +288,13 @@ def normalize_czech_verb_flexion(t):
             "f": t['ptraf'],
             "p": t['ptrap'],
         }
+    if 'sfut1' in t:
+        output["futur1"] = {
+            "0": t['sfut1'],
+            "1": t['sfut2'],
+            "2": t['sfut3'],
+            "3": t['pfut1'],
+            "4": t['pfut2'],
+            "5": t['pfut3'],
+        }
     return output
