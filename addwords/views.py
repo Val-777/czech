@@ -1,10 +1,8 @@
 from django.shortcuts import render, redirect
 
-from .forms import WordForm, NounForm, VerbForm  # , ExNNSForm, ExAASForm, ExLNSForm, ExIIVForm, ExKKVForm  # noqa: F401
-# ,
+from .forms import WordForm, NounForm, VerbForm
 from .models import Word, Noun, Verb
-from quiz.models import ExNNS, ExAAS, ExLNS, ExIIV, ExKKV, ExPPV
-# from .serializers import ExNNSSerializer, ExAASSerializer, ExLNSSerializer, ExIIVSerializer, ExKKVSerializer  # noqa: F401
+from quiz.models import ExNNS, ExAAS, ExLNS, ExIIV, ExKKV, ExPPV, ExFFV
 
 
 def add(request):
@@ -51,6 +49,7 @@ def add_verb(request):
             ExIIV.make_new(word)
             ExKKV.make_new(word)
             ExPPV.make_new(word)
+            ExFFV.make_new(word)
             return redirect('add')
     else:
         czech_word = request.session['word']['czech']

@@ -155,3 +155,27 @@ class ExPPV(Exercise):
                            german=german,
                            content=verb)
             exercise.save()
+
+
+class ExFFV(Exercise):
+    """
+    The exercise for learning verb translations
+    """
+    options = JSONField(blank=True)
+    content = models.ForeignKey(Verb,
+                                models.CASCADE,
+                                blank=False,
+                                null=False,)
+
+    @classmethod
+    def make_new(cls, verb):
+        for i in range(6):
+            pronouns = PersPronoun.objects.filter(role=i)
+            opts = ",".join([p.german for p in pronouns])
+            exercise = cls(chapter=verb.chapter,
+                           czech=verb.cz["futur"][str(i)],
+                           german='OPT1' + ' ' +
+                           verb.de["futur1"]["active"]["indicative"][str(i)],
+                           options={"1": opts},
+                           content=verb)
+            exercise.save()

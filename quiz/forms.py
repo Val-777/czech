@@ -42,3 +42,10 @@ class ExPPVForm(forms.Form):
         label='',
         help_text='Tschechische Übersetzung hier eingeben, in Klammern steht das Geschlecht des Subjekts',
     )
+
+
+class ExFFVForm(forms.Form):
+    czech = forms.CharField(
+        label='',
+        help_text='Tschechische Übersetzung hier eingeben',
+    )
