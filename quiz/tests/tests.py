@@ -1,7 +1,9 @@
 from django.urls import reverse, resolve
 from django.test import TestCase
+# from django.shortcuts import get_object_or_404
 
 from quiz.views import home, exercise
+from quiz.models import ExNNS, ExAAS, ExLNS
 from addwords.models import Noun
 
 
@@ -18,7 +20,7 @@ class homeTests(TestCase):
 
 class ExerciseTests(TestCase):
     def setUp(self):
-        Noun.objects.create(
+        noun = Noun.objects.create(
             chapter=1,
             czech='hudba',
             german='Musik',
@@ -95,6 +97,9 @@ class ExerciseTests(TestCase):
                 ],
                 "genus": "f"
             })
+        ExNNS.make_new(noun)
+        ExAAS.make_new(noun)
+        ExLNS.make_new(noun)
 
     def test_ExNNS_url_resolves_exercise_view(self):
         view = resolve('/exercises/ExNNS/')
@@ -119,3 +124,22 @@ class ExerciseTests(TestCase):
         url = reverse('exercise', kwargs={'kind': 'whatever'})
         response = self.client.get(url)
         self.assertEquals(response.status_code, 404)
+
+    def test_ExNNS_get_exerise_JSON_success(self):
+        url = reverse('get_exercise', kwargs={'kind': 'ExNNS'})
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+    def test_ExAAS_get_exerise_JSON_success(self):
+        url = reverse('get_exercise', kwargs={'kind': 'ExAAS'})
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+    def test_ExLNS_get_exerise_JSON_success(self):
+        url = reverse('get_exercise', kwargs={'kind': 'ExLNS'})
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+    # def test_noun_in_db(self):
+    #     noun = get_object_or_404(Noun, czech='hudba')
+    #     self.assertEquals(noun.german, 'Musik')
