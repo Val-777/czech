@@ -102,7 +102,7 @@ class Noun(Word):
     de = JSONField(blank=True)
 
     @staticmethod
-    def make_czech_noun_json(word):
+    def make_czech_json(word):
         wk = word['wk']
         output = {'czech': word['czech']}
         for section in wk.sections:
@@ -133,7 +133,7 @@ class Noun(Word):
         return output
 
     @staticmethod
-    def make_german_word_json(german):
+    def make_german_json(german):
         """
         Get JSON representation of German Noun from wiktionary
         """
@@ -157,7 +157,7 @@ class Verb(Word):
     de = JSONField(blank=True)
 
     @staticmethod
-    def make_czech_verb_json(word):
+    def make_czech_json(word):
         wk = word['wk']
         output = {'czech': word['czech']}
         for section in wk.sections:
@@ -186,7 +186,7 @@ class Verb(Word):
         return output
 
     @staticmethod
-    def make_german_verb_json(german):
+    def make_german_json(german):
         """
         Get JSON representation of German Verb from wiktionary
         """
