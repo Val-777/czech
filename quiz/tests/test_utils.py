@@ -1,6 +1,6 @@
-from django.test import TestCase
+# from django.test import TestCase
 
-from quiz.utils import get_wikitext
+# from quiz.utils import get_wikitext
 
 # class SignUpTests(TestCase):
 #     def setUp(self):
@@ -8,6 +8,6 @@ from quiz.utils import get_wikitext
 #         self.response = self.client.get(url)
 
 
-class UtilTests(TestCase):
-    def wiki_test(self):
-        self.assertEquals(str(type(get_wikitext('muž'))), "<class 'wikitextparser.wikitext.WikiText'>")
+# class UtilTests(TestCase):
+#     def wiki_test(self):
+#         self.assertEquals(str(type(get_wikitext('muž'))), "<class 'wikitextparser.wikitext.WikiText'>")
