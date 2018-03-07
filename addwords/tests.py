@@ -1,5 +1,7 @@
-from django.urls import reverse
+from django.urls import reverse, resolve
 from django.test import TestCase
+
+from addwords.views import add
 
 
 class addTests(TestCase):
@@ -7,6 +9,10 @@ class addTests(TestCase):
         url = reverse('add')
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
+
+    def test_add_url_resolves_add_view(self):
+        view = resolve('/add/')
+        self.assertEquals(view.func, add)
 
 
 # class addVerbTests(TestCase):
