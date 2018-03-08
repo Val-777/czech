@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import Http404
 
-import sys
-
-from .forms import WordForm, NounForm, VerbForm  # noqa: F401
-from .models import Word, Noun, Verb  # noqa: F401
+from .forms import WordForm
+from .models import Word
 from quiz.models import ExNNS, ExAAS, ExLNS, ExIIV, ExKKV, ExPPV, ExFFV
 from .utils import get_wikitext
+from utils import get_class
 
 
 def add(request):
@@ -33,8 +32,7 @@ def add(request):
 def add_word(request, kind):
     if request.method == 'POST':
         try:
-            form = getattr(sys.modules[__name__],
-                           kind + 'Form')(request.POST)
+            form = get_class(kind, 'Form')(request.POST)
         except AttributeError:
             raise Http404("No such form type found!")
         if form.is_valid():
@@ -54,9 +52,8 @@ def add_word(request, kind):
         czech_word = request.session['word']['czech']
         word = Word.get_czech_word_type_and_wiki(
             czech_word, get_wikitext(czech_word, 'cz'))
-        word_type = getattr(sys.modules[__name__], kind)
+        word_type = get_class(kind)
         word_json = word_type.make_czech_json(word)
         word_json['de'] = word_type.make_german_json(word_json['german'])
-        form = getattr(sys.modules[__name__],
-                       kind + 'Form')(initial=word_json)
+        form = get_class(kind, 'Form')(initial=word_json)
         return render(request, 'addwords/new_{}.html'.format(kind.lower()), {'form': form})
