@@ -14,16 +14,14 @@ class addTests(TestCase):
         view = resolve('/add/')
         self.assertEquals(view.func, add)
 
+    # def test_add_Noun_view_status_code(self):
+    #     url = reverse('add_word', kwargs={'kind': 'Noun'})
+    #     response = self.client.get(url)
+    #     self.assertEquals(response.status_code, 200)
+
 
 # class addVerbTests(TestCase):
 #     def test_add_view_status_code(self):
 #         url = reverse('add_verb')
-#         response = self.client.get(url)
-#         self.assertEquals(response.status_code, 200)
-
-
-# class addNounTests(TestCase):
-#     def test_add_view_status_code(self):
-#         url = reverse('add_noun')
 #         response = self.client.get(url)
 #         self.assertEquals(response.status_code, 200)
