@@ -147,3 +147,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication'
     ]
 }
+
+LOGOUT_REDIRECT_URL = 'home'

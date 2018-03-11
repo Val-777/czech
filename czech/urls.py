@@ -1,7 +1,5 @@
-"""
-czech URL Configuration
-"""
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from quiz import views as quiz_views
@@ -17,4 +15,5 @@ urlpatterns = [
          quiz_views.get_exercise, name='get_exercise'),
     path('exercises/<slug:kind>/', quiz_views.exercise, name='exercise'),
     path('signup/', accounts_views.signup, name='signup'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
