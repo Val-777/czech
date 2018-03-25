@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import Http404
 
@@ -8,6 +9,7 @@ from .utils import get_wikitext
 from utils import get_class
 
 
+@login_required
 def add(request):
     render_args = {}
     if request.method == 'POST':
