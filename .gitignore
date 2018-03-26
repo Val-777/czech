@@ -112,3 +112,7 @@ venv/
 # SQLite database files
 
 *.sqlite3
+
+# jupyter notebooks
+
+*.ipynb
