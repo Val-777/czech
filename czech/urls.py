@@ -1,3 +1,4 @@
+from django.conf.urls import include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, re_path
@@ -8,6 +9,7 @@ from accounts import views as accounts_views
 
 urlpatterns = [
     path('', quiz_views.home, name='home'),
+    path('api/addwords/', include('addwords.api.urls', namespace='addwords-api')),
     path('add/', add_views.add, name='add'),
     path('add/<slug:kind>/', add_views.add_word, name='add_word'),
     path('admin/', admin.site.urls),
