@@ -2,8 +2,8 @@ from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
     ListAPIView,
-    UpdateAPIView,
     RetrieveAPIView,
+    RetrieveUpdateAPIView,
 )
 
 from addwords.models import PersPronoun
@@ -23,7 +23,7 @@ class PersPronounListAPIView(ListAPIView):
     serializer_class = PersPronounSerializer
 
 
-class PersPronounUpdateAPIView(UpdateAPIView):
+class PersPronounUpdateAPIView(RetrieveUpdateAPIView):
     queryset = PersPronoun.objects.all()
     serializer_class = PersPronounSerializer
 
