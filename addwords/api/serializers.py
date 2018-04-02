@@ -7,6 +7,7 @@ class PersPronounSerializer(ModelSerializer):
     class Meta:
         model = PersPronoun
         fields = [
+            'id',
             'chapter',
             'german',
             'czech',
