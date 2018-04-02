@@ -6,6 +6,10 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView,
 )
 
+from rest_framework.permissions import (
+    IsAdminUser,
+)
+
 from addwords.models import PersPronoun
 from .serializers import (
     PersPronounSerializer,
@@ -16,6 +20,7 @@ from .serializers import (
 class PersPronounCreateAPIView(CreateAPIView):
     queryset = PersPronoun.objects.all()
     serializer_class = PersPronounCreateSerializer
+    permission_classes = [IsAdminUser, ]
 
 
 class PersPronounListAPIView(ListAPIView):
@@ -26,11 +31,13 @@ class PersPronounListAPIView(ListAPIView):
 class PersPronounUpdateAPIView(RetrieveUpdateAPIView):
     queryset = PersPronoun.objects.all()
     serializer_class = PersPronounSerializer
+    permission_classes = [IsAdminUser, ]
 
 
 class PersPronounDeleteAPIView(DestroyAPIView):
     queryset = PersPronoun.objects.all()
     serializer_class = PersPronounSerializer
+    permission_classes = [IsAdminUser, ]
 
 
 class PersPronounDetailAPIView(RetrieveAPIView):
