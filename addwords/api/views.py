@@ -1,10 +1,25 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import (
+    DestroyAPIView,
+    ListAPIView,
+    UpdateAPIView,
+    RetrieveAPIView,
+)
 
 from addwords.models import PersPronoun
 from .serializers import PersPronounSerializer
 
 
 class PersPronounListAPIView(ListAPIView):
+    queryset = PersPronoun.objects.all()
+    serializer_class = PersPronounSerializer
+
+
+class PersPronounUpdateAPIView(UpdateAPIView):
+    queryset = PersPronoun.objects.all()
+    serializer_class = PersPronounSerializer
+
+
+class PersPronounDeleteAPIView(DestroyAPIView):
     queryset = PersPronoun.objects.all()
     serializer_class = PersPronounSerializer
 
