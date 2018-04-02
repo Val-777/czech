@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
@@ -24,8 +26,18 @@ class PersPronounCreateAPIView(CreateAPIView):
 
 
 class PersPronounListAPIView(ListAPIView):
-    queryset = PersPronoun.objects.all()
     serializer_class = PersPronounSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = PersPronoun.objects.all()
+        query = self.request.GET.get('q')
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(gender__iexact=query) |
+                Q(chapter__iexact=query) |
+                Q(role__iexact=query)
+            ).distinct()
+        return queryset_list
 
 
 class PersPronounUpdateAPIView(RetrieveUpdateAPIView):
